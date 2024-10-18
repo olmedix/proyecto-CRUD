@@ -1,0 +1,67 @@
+﻿* {
+	box-sizing: border-box; /* Les mides inclouen 'padding', 'border' i el 'content' (no el margin) */
+}
+#header, #footer {
+	background-color: #3d4f55;
+	color: white;
+	padding: 15px;
+	text-align: left;
+}
+
+#content {
+	width: 100%;
+	clear: both; /* sense elements flotats a la dreta i a l'esquerra */
+	display: table; /* el div es comporta com una taula:  'block', 'inline' */
+	background-color: white;
+}
+
+#menu {
+	width: 15%;
+	float: left;
+	padding: 5px;
+}
+#section {
+	width: 85%;
+	float: left;
+	padding: 15px;
+}
+#menu ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 5px;
+}
+#menu li {
+	padding: 5px;
+	margin-bottom: 2px;
+	background-color: #3d4f55;
+	color: white;
+}
+#menu li:hover {
+	background-color: black;
+	color: white;
+}
+
+
+.section__title,
+.section__add{
+	display: inline-block;
+}
+
+.section__add{
+	background-color: rgb(64, 64, 231);
+	margin-left: 25px;
+	border-radius: 50px;
+	padding: 5px;
+}
+
+.section__add a{
+	color: white;
+	font-weight: 600;
+	font-size: 20px;
+	text-decoration: none;
+}
+
+.section__add a:hover{
+	color: white;
+	text-decoration: none;
+}
