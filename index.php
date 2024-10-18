@@ -37,7 +37,7 @@
                 <li><a href="index.php">Home</a></li>
                 <li>
                     <ul> HR
-                        <li><a href="./models/Employee.php">Employees</a></li>
+                        <li><a href="./models/EmployeeList.php">Employees</a></li>
                         <li><a href="departments.php">Departments</a></li>
                         <li><a href="jobs.php">Jobs</a></li>
                         <li><a href="locations.php">Locations</a></li>

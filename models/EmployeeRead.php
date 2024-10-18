@@ -1,9 +1,7 @@
 <?php
-
 require_once __DIR__ . '/../config/Database.php';
 require_once __DIR__ . '/Model.php';
 require_once __DIR__ . '/Employee.php';
-
 
 
 use Config\Database;
@@ -87,16 +85,7 @@ try {
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <style>
-        .wrapper {
-            width: 600px;
-            margin: 0 auto;
-        }
-
-        table tr td:last-child {
-            width: 120px;
-        }
-    </style>
+    <link rel="stylesheet" href="../src/css/estils.css">
     <script>
         $(document).ready(function () {
             $('[data-toggle="tooltip"]').tooltip();
@@ -114,7 +103,7 @@ try {
                 <li><a href="../index.php">Home</a></li>
                 <li>
                     <ul> HR
-                        <li><a href="./Employee.php">Employees</a></li>
+                        <li><a href="./EmployeeList.php">Employees</a></li>
                         <li><a href="departments.php">Departments</a></li>
                         <li><a href="jobs.php">Jobs</a></li>
                         <li><a href="locations.php">Locations</a></li>
@@ -133,10 +122,6 @@ try {
         </div>
         <div id="section">
             <h3>Employee Details</h3>
-            <!------------------------------------------------------------------------------------------>
-
-
-            <!------------------------------------------------------------------------------------------>
             <div class="container">
                 <h1>Detalles del Empleado</h1>
                 <?php if ($employee !== null): ?>
@@ -186,14 +171,14 @@ try {
                             <td><?= $employee->getDepartmentId() ?></td>
                         </tr>
                         <tr>
-                            <th>Nombre del Departamento</th> <!-- Nueva fila -->
-                            <td><?= $department_name ?></td> <!-- Mostrar nombre del departamento -->
+                            <th>Nombre del Departamento</th>
+                            <td><?= $department_name ?></td>
                         </tr>
                     </table>
                 <?php else: ?>
                     <p>Empleado no encontrado.</p>
                 <?php endif; ?>
-                <a href="Employee.php" class="btn btn-primary">Volver a la lista de empleados</a>
+                <a href="./EmployeeList.php" class="btn btn-primary">Volver a la lista de empleados</a>
             </div>
         </div>
     </div>
