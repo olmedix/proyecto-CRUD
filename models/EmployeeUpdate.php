@@ -156,8 +156,20 @@
                 <input type="number" name="manager_id" id="manager_id" value="<?= $employee->getManagerId() ?? '' ?>">
 
                 <label for="department_id">Department ID:</label>
-                <input type="number" name="department_id" id="department_id"
-                    value="<?= $employee->getDepartmentId() ?? '' ?>">
+                <select name="department_id" id="department_id">
+                    <option value="10" <?= $employee->getDepartmentId() == 10 ? 'selected' : '' ?>>Administration</option>
+                    <option value="20" <?= $employee->getDepartmentId() == 20 ? 'selected' : '' ?>>Marketing</option>
+                    <option value="30" <?= $employee->getDepartmentId() == 30 ? 'selected' : '' ?>>Purchasing</option>
+                    <option value="40" <?= $employee->getDepartmentId() == 40 ? 'selected' : '' ?>>Human Resources</option>
+                    <option value="50" <?= $employee->getDepartmentId() == 50 ? 'selected' : '' ?>>Shipping</option>
+                    <option value="60" <?= $employee->getDepartmentId() == 60 ? 'selected' : '' ?>>IT</option>
+                    <option value="70" <?= $employee->getDepartmentId() == 70 ? 'selected' : '' ?>>Public Relations
+                    </option>
+                    <option value="80" <?= $employee->getDepartmentId() == 80 ? 'selected' : '' ?>>Sales</option>
+                    <option value="90" <?= $employee->getDepartmentId() == 90 ? 'selected' : '' ?>>Executive</option>
+                    <option value="100" <?= $employee->getDepartmentId() == 100 ? 'selected' : '' ?>>Finance</option>
+                    <option value="110" <?= $employee->getDepartmentId() == 110 ? 'selected' : '' ?>>Accounting</option>
+                </select>
 
                 <button type="submit">
                     Guardar
