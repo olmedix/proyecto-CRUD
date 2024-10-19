@@ -13,10 +13,8 @@ abstract class Model
     public static function all()
     {
         try {
-            // Cargar la configuración de la base de datos
-            $config = Database::loadConfig('C:/temp/config.db');
 
-            // Crear una instancia de Database con los parámetros cargados
+            $config = Database::loadConfig('C:/temp/config.db');
             $db = new Database(
                 $config['DB_HOST'],
                 $config['DB_PORT'],
@@ -31,7 +29,6 @@ abstract class Model
             $table = static::$table;
 
             try {
-                // Ejecutar la consulta
                 $sql = "SELECT * FROM $table";
                 $result = $db->conn->query($sql);
 
@@ -45,16 +42,18 @@ abstract class Model
                     }
                 }
             } catch (\mysqli_sql_exception $e) {
+                //TODO 
                 echo "Error al ejecutar la consulta: " . $e->getMessage();
             }
 
-            // Cerrar la conexión
-            $db->closeDB();
-
             // Retornar los registros obtenidos
             return $rows;
-        } catch (Exception) {
+        } catch (Exception $e) {
             echo "Error general de all: " . $e->getMessage();
+        } finally {
+            if (isset($db) && $db) {
+                $db->closeDB();
+            }
         }
     }
 }

@@ -131,7 +131,7 @@ class Employee extends Model
             echo "Error general de save: " . $e->getMessage();
         } finally {
             if ($conn) {
-                echo 'conexion cerrada';
+                // Tancar la c onnexió
                 $db->closeDB();
             }
         }
