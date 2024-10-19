@@ -139,7 +139,7 @@ class Employee extends Model
     }
 
 
-    public function destroy(): void
+    public function destroy(int $employee_id): void
     {
         try {
             // Carga el fichero donde están los parámetros de configuración
@@ -158,39 +158,51 @@ class Employee extends Model
 
             $table = static::$table;
 
-            // Connectar a la base de dades
-            if (isset($this->employee_id)) {
-                $sql = "SELECT * FROM $table WHERE employee_id = $this->employee_id";
-                $result = $conn->query($sql);
+            // Verificar si el employee_id existe
+            $sql = "SELECT * FROM $table WHERE employee_id = ?";
+            $stmt = $conn->prepare($sql);
 
-                // Comprovar si hi ha resultats
-                if ($result->num_rows == 1) {
-                    $sql = "DELETE FROM $table 
-				    WHERE employee_id = ?";
-                    $stmt = $db->conn->prepare($sql);
-                    // Vincular els valors
-                    $stmt->bind_param("i", $this->employee_id);
-                    // Executar la consulta
-                    if ($stmt->execute()) {
-                        echo "L'empleat s'ha eliminat correctament.";
-                    } else {
-                        echo "Error eliminant l'empleat: " . $stmt->error;
-                    }
-                    $stmt->close();
-                } else {
-                    echo "L'empleat no existeix.";
+            if (!$stmt) {
+                die('Error al preparar la consulta: ' . $conn->error);
+            }
+
+            // Vincular los parámetros
+            $stmt->bind_param("i", $employee_id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            // Comprobar si hay resultados
+            if ($result->num_rows == 1) {
+                // Preparar la eliminación
+                $sql = "DELETE FROM $table WHERE employee_id = ?";
+                $stmt = $conn->prepare($sql);
+                if (!$stmt) {
+                    die('Error al preparar la consulta de eliminación: ' . $conn->error);
+                }
+
+                // Vincular los valores
+                $stmt->bind_param("i", $employee_id);
+
+                // Ejecutar la consulta
+                if (!$stmt->execute()) {
+                    echo "Error eliminando el empleado: " . $stmt->error;
                 }
             } else {
-                echo "Error, ID no informat";
+                echo "El empleado no existe.";
             }
 
 
+        } catch (\mysqli_sql_exception $e) {
+            echo "Error en destroy: " . $e->getMessage();
+        } finally {
+            if ($conn) {
+                $db->closeDB();
+            }
 
-            $db->closeDB();
-        } catch (Exception $e) {
-            echo "Error general de destroy: " . $e->getMessage();
+
         }
     }
+
 
 
     // Verificamos que exista un empleado con el id y retornamos  ? emleado: null 

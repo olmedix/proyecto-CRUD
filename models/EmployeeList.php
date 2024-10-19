@@ -94,7 +94,7 @@
                     echo '<td>';
                     echo '<a href="./EmployeeRead.php?id=' . $employee->getEmployeeId() . '" class="mr-2" title="View File" data-toggle="tooltip"><span class="fa fa-eye"></span></a>' .
                         '<a href="./EmployeeUpdate.php?id=' . $employee->getEmployeeId() . '" class="mr-2" title="Update File" data-toggle="tooltip"><span class="fa fa-pencil"></span></a>' .
-                        '<a href="./EmployeeDelete.php?id=' . $employee->getEmployeeId() . '" class="mr-2" title="Delete File" data-toggle="tooltip"><span class="fa fa-trash"></span></a>' .
+                        '<a href="./EmployeeDestroy.php?id=' . $employee->getEmployeeId() . '" class="mr-2" title="Delete File" data-toggle="tooltip"><span class="fa fa-trash"></span></a>' .
                         '</td>';
                     echo '</tr>';
                 }
