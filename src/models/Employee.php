@@ -1,10 +1,10 @@
 <?php
 
-namespace Models;
+namespace Juanjo\Www\models;
+require '../../vendor/autoload.php';
 
-require_once __DIR__ . '/Model.php';
 
-use config\Database;
+use Juanjo\Www\config\Database;
 use Exception;
 
 class Employee extends Model
@@ -447,4 +447,3 @@ class Employee extends Model
 
 }
 
-?>

@@ -1,0 +1,17 @@
+{
+    "name": "juanjo/www",
+    "type": "project",
+    "license": "mit",
+    "autoload": {
+        "psr-4": {
+            "Juanjo\\Www\\models\\": "src/models",
+            "Juanjo\\Www\\config\\": "src/config"
+        }
+    },
+    "authors": [
+        {
+            "name": "juanjo"
+        }
+    ],
+    "require": {}
+}

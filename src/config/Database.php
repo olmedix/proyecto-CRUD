@@ -1,6 +1,7 @@
 <?php
 
-namespace config;
+namespace Juanjo\Www\config;
+require '../../vendor/autoload.php';
 
 class Database
 {

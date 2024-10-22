@@ -1,7 +1,7 @@
 <?php
-require_once __DIR__ . "./Employee.php";
+require '../../vendor/autoload.php';
 
-use Models\Employee;
+use Juanjo\Www\models\Employee;
 
 if (isset($_GET['id'])) {
     $employeeId = (int) $_GET['id'];
@@ -19,7 +19,7 @@ if (isset($_GET['id'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../src/css/estils.css">
+    <link rel="stylesheet" href="../css/estils.css">
     <title>Human Resource</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">

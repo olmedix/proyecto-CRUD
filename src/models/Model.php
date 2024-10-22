@@ -1,10 +1,10 @@
 <?php
 
-namespace Models;
+namespace Juanjo\Www\models;
+require '../../vendor/autoload.php';
 
-require_once __DIR__ . '/../config/Database.php';
 
-use config\Database;
+use Juanjo\Www\config\Database;
 use Exception;
 
 abstract class Model
