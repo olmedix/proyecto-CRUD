@@ -214,7 +214,6 @@
 
                     <label class="form__label" for="department_id">Department ID:</label>
                     <select class="form__input" name="department_id" id="department_id">
-                        <option value=null>No Department</option>
                         <option value="10" <?= $employee->getDepartmentId() == 10 ? 'selected' : '' ?>>Administration
                         </option>
                         <option value="20" <?= $employee->getDepartmentId() == 20 ? 'selected' : '' ?>>Marketing</option>
