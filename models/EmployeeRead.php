@@ -134,7 +134,7 @@ try {
         <div id="section">
 
             <div class="container">
-                <h1>Detalles del Empleado</h1>
+                <h1>Employee details</h1>
                 <?php if ($employee !== null): ?>
                     <table class="table table-bordered">
                         <tr>

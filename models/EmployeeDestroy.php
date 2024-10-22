@@ -8,7 +8,6 @@ if (isset($_GET['id'])) {
 
     $employee = new Employee(0);
 
-    // Llamar al método destroy() para eliminar el empleado
     $employee->destroy($employeeId);
 
 }
@@ -86,7 +85,7 @@ if (isset($_GET['id'])) {
         <div id="section" class="section__delete">
             <h3 class="delete__title">The employee has been successfully removed!</h3>
             <div class="delete__link">
-                <a href="./EmployeeList.php" class="btn btn-primary ">Volver a la lista de empleados</a>
+                <a href="./EmployeeList.php" class="btn btn-primary ">Return to employee list</a>
             </div>
 
 

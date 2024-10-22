@@ -50,7 +50,7 @@
         <div id="section">
             <h3 class="section__title">Employees</h3>
 
-            <div class="section__add"> <a href="./EmployeeUpdate.php">Agregar Empleado</a></div>
+            <div class="section__add"> <a href="./EmployeeUpdate.php">Add employee</a></div>
 
             <!-- CODIGO PHP INTERNO -->
             <?php

@@ -46,6 +46,7 @@ class Employee extends Model
 
             // Aquí realmente hacemos la conexion
             $conn = $db->connectDB();
+            $conn->autocommit(false);
 
             $table = static::$table;
 
@@ -65,6 +66,7 @@ class Employee extends Model
             if ($result->num_rows > 0) {
                 echo "Error: ja existeix un altre empleat amb aquest email.";
                 $stmt->close();
+                $conn->rollback();
                 return;
             }
 
@@ -113,12 +115,14 @@ class Employee extends Model
                 if ($stmt->execute()) {
                     if ($stmt->affected_rows > 0) {
                         $conn->commit();
-                        echo "L'empleat s'ha afegit o modificat correctament.";
+                        echo '<p style="font-size: 20px; color: blue; font-weight: bold;">Employee successfully registered.</p>';
+
                     } else {
                         $conn->rollback();
-                        echo "No s'ha realitzat cap canvi.";
+                        echo '<p style="font-size: 20px; color: red; font-weight: bold;">There was an error registering the employee.</p>';
                     }
                 } else {
+                    $conn->rollback();
                     echo "Error en afegir o modificar l'empleat: " . $stmt->error;
                 }
             } catch (\mysqli_sql_exception $e) {
@@ -153,8 +157,11 @@ class Employee extends Model
                 $config['DB_PASSWORD']
             );
 
-            // Aquí realmente hacemos la conexion
+            // Aquí realmente hacemos la conexión
             $conn = $db->connectDB();
+
+            // Desactiva el autocommit para manejar transacciones manualmente
+            $conn->autocommit(false);
 
             $table = static::$table;
 
@@ -173,10 +180,12 @@ class Employee extends Model
 
             // Comprobar si hay resultados
             if ($result->num_rows == 1) {
-                // Preparar la eliminación
+
                 $sql = "DELETE FROM $table WHERE employee_id = ?";
                 $stmt = $conn->prepare($sql);
+
                 if (!$stmt) {
+                    $conn->rollback();  // Hacer rollback si hay un error en la preparación
                     die('Error al preparar la consulta de eliminación: ' . $conn->error);
                 }
 
@@ -184,25 +193,31 @@ class Employee extends Model
                 $stmt->bind_param("i", $employee_id);
 
                 // Ejecutar la consulta
-                if (!$stmt->execute()) {
+                if ($stmt->execute()) {
+
+                    $conn->commit();
+                    echo "Empleado eliminado correctamente.";
+                } else {
+
+                    $conn->rollback();
                     echo "Error eliminando el empleado: " . $stmt->error;
                 }
             } else {
+                $conn->rollback();
                 echo "El empleado no existe.";
             }
 
+            $stmt->close();
 
         } catch (\mysqli_sql_exception $e) {
+            $conn->rollback();
             echo "Error en destroy: " . $e->getMessage();
         } finally {
             if ($conn) {
                 $db->closeDB();
             }
-
-
         }
     }
-
 
 
     // Verificamos que exista un empleado con el id y retornamos  ? emleado: null 
@@ -236,7 +251,8 @@ class Employee extends Model
 
             // Verificar si se encontró el empleado
             if ($result->num_rows === 0) {
-                throw new Exception("No se encontró ningún empleado con ID $id");
+                echo "<script>alert('No se encontró ningún empleado con ID $id');</script>";
+                return null;
             }
 
             // Recuperar los datos
@@ -247,7 +263,8 @@ class Employee extends Model
 
 
             if ($employee_id === null) {
-                throw new Exception("El ID del empleado es nulo o inválido.");
+                echo "<script>alert('El ID del empleado es nulo o inválido.');</script>";
+                return null;
             }
 
 
@@ -274,7 +291,7 @@ class Employee extends Model
             return null;
         } catch (Exception $e) {
             // Otras excepciones
-            echo "Error: " . $e->getMessage();
+            echo "Error general: " . $e->getMessage();
             return null;
         }
     }
@@ -282,19 +299,18 @@ class Employee extends Model
 
     public static function getLastEmployeeId()
     {
-        $config = Database::loadConfig('C:/temp/config.db');
-        $db = new Database(
-            $config['DB_HOST'],
-            $config['DB_PORT'],
-            $config['DB_DATABASE'],
-            $config['DB_USERNAME'],
-            $config['DB_PASSWORD']
-        );
-
-        $conn = null;
-
         try {
-            // Conectar a la base de datos
+            $config = Database::loadConfig('C:/temp/config.db');
+            $db = new Database(
+                $config['DB_HOST'],
+                $config['DB_PORT'],
+                $config['DB_DATABASE'],
+                $config['DB_USERNAME'],
+                $config['DB_PASSWORD']
+            );
+
+            $conn = null;
+
             $conn = $db->connectDB();
 
             // Consulta SQL para obtener el mayor `employee_id`
@@ -305,7 +321,7 @@ class Employee extends Model
             if ($row = $result->fetch_assoc()) {
                 return $row['last_id'];
             } else {
-                return 0; // Si no hay empleados, empezamos con el ID 0
+                return 0;
             }
 
         } catch (Exception $e) {
@@ -317,11 +333,6 @@ class Employee extends Model
             }
         }
     }
-
-
-
-
-
 
     public function getEmployeeId(): int
     {
