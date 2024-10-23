@@ -20,6 +20,13 @@
         table tr td:last-child {
             width: 120px;
         }
+
+        .session_welcome {
+            font-size: 25px;
+            color: blue;
+            text-align: center;
+            font-weight: 900;
+        }
     </style>
     <script>
         $(document).ready(function () {
@@ -55,6 +62,16 @@
                 </li>
             </ul>
         </div>
+
+        <?php
+        session_start();
+
+        // Verifica si hay un mensaje y lo muestra
+        if (isset($_SESSION['message'])) {
+            echo '<p class="session_welcome">' . $_SESSION['message'] . '</p>'; // Muestra el mensaje
+            unset($_SESSION['message']); // Elimina el mensaje de la sesión
+        }
+        ?>
 
         <fieldset id="login__container">
             <legend>Inicia sesión</legend>

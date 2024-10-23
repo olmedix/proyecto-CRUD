@@ -15,10 +15,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($username === $valid_user && $password === $valid_password) {
         $_SESSION['username'] = $username;  // Inclou dades de l'usuari a '$_SESSION'
         $_SESSION['loggedin'] = true;
+        $_SESSION['message'] = "¡Welcome, $username!";
         header("Location: index.php");
         exit();
     } else {
-        echo "<script>alert('User or Password wrong...');</script>";
+        $_SESSION['message'] = "Error: incorrect username or password.";
+        header("Location: index.php");
+        exit();
     }
 
 }
