@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="./src/css/estils.css">
+    <link rel="stylesheet" href="./src/css/login.css">
     <title>Human Resource</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -54,6 +55,24 @@
                 </li>
             </ul>
         </div>
+
+        <fieldset id="login__container">
+            <legend>Inicia sesión</legend>
+
+            <form action="login.php" method="POST">
+                <label for="username">Usuario:</label>
+                <input type="text" id="username" name="username" required>
+
+                <label for="password">Contraseña:</label>
+                <input type="password" id="password" name="password" required>
+
+                <button type="submit">Iniciar sesión</button>
+            </form>
+
+
+        </fieldset>
+
+
 
         <div id="section">
             <h3>Human Resource and Order Entries Management</h3>

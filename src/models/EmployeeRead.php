@@ -1,5 +1,11 @@
 <?php
 
+session_start();
+if (!isset($_SESSION['loggedin'])) {
+    header("Location: index.php"); // Si no está logueado, redirigir al login
+    exit;
+}
+
 require '../../vendor/autoload.php';
 
 use Juanjo\Www\config\Database;
@@ -103,6 +109,9 @@ try {
 <body>
     <div id="header">
         <h1>HR & OE Management</h1>
+        <form action="../../logout.php" method="post">
+            <button type="submit">Cerrar sesión</button>
+        </form>
     </div>
     <div id="content">
         <div id="menu">

@@ -1,3 +1,12 @@
+<?php
+session_start();
+if (!isset($_SESSION['loggedin'])) {
+    header("Location: index.php"); // Si no está logueado, redirigir al login
+    exit;
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -23,6 +32,9 @@
 <body>
     <div id="header">
         <h1>HR & OE Management</h1>
+        <form action="../../logout.php" method="post">
+            <button type="submit">Cerrar sesión</button>
+        </form>
     </div>
     <div id="content">
         <div id="menu">
