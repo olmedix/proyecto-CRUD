@@ -50,14 +50,17 @@
 
         <div id="section">
             <h3>Employee</h3>
-            <h4></h4>
 
             <!----------------------------------------------------------------------->
-
             <?php
             require '../../vendor/autoload.php';
 
+
+
             use Juanjo\Www\models\Employee;
+            use Faker\Factory as FakerFactory;
+
+            $faker = FakerFactory::create();
 
 
             // Si es un POST (enviar formulario para agregar o actualizar)
@@ -110,11 +113,13 @@
 
                     <label class="form__label" for="first_name">First Name:</label>
                     <input class="form__input" type="text" name="first_name" id="first_name"
-                        value="<?= $employee->getFirstName() ?>" required maxlength="20" pattern="[a-zA-Z]{1,20}">
+                        value="<?= $employee->getFirstName() ? $employee->getFirstName() : $faker->firstName() ?>"
+                        required maxlength="20" pattern="[a-zA-Z]{1,20}">
 
                     <label class="form__label" for="last_name">Last Name:</label>
                     <input class="form__input" type="text" name="last_name" id="last_name"
-                        value="<?= $employee->getLastName() ?>" required maxlength="25" pattern="[a-zA-Z]{1,20}">
+                        value="<?= $employee->getLastName() ? $employee->getLastName() : $faker->lastName() ?>" required
+                        maxlength="25" pattern="[a-zA-Z]{1,20}">
 
                     <label class="form__label" for="job_id">Job ID:</label>
                     <select class="form__input" name="job_id" id="job_id" required>

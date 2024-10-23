@@ -6,6 +6,7 @@ require '../../vendor/autoload.php';
 
 use Juanjo\Www\config\Database;
 use Exception;
+use mysqli_sql_exception;
 
 class Employee extends Model
 {
@@ -33,46 +34,44 @@ class Employee extends Model
     public function save(): void
     {
         try {
-            // Carga el fichero donde están los parámetros de configuración
-            $config = Database::loadConfig('C:/temp/config.db');
-
-            $db = new Database(
-                $config['DB_HOST'],
-                $config['DB_PORT'],
-                $config['DB_DATABASE'],
-                $config['DB_USERNAME'],
-                $config['DB_PASSWORD']
-            );
-
-            // Aquí realmente hacemos la conexion
-            $conn = $db->connectDB();
-            $conn->autocommit(false);
-
-            $table = static::$table;
-
-            // Verificar si el email ya existe (excluyendo el caso del mismo empleado_id)
-            $sql = "SELECT employee_id FROM $table WHERE email = ? AND employee_id != ?";
-            $stmt = $conn->prepare($sql);
-            if (!$stmt) {
-                die('Error al preparar la consulta: ' . $conn->error);
-            }
-
-            // Vincular los parámetros
-            $stmt->bind_param("si", $this->email, $this->employee_id);
-            $stmt->execute();
-            $result = $stmt->get_result();
-
-            // Si hay un resultado, significa que ya existe otro registro con ese email
-            if ($result->num_rows > 0) {
-                echo "Error: ja existeix un altre empleat amb aquest email.";
-                $stmt->close();
-                $conn->rollback();
-                return;
-            }
-
-            $stmt->close();
-
             try {
+                // Carga el fichero donde están los parámetros de configuración
+                $config = Database::loadConfig('C:/temp/config.db');
+
+                $db = new Database(
+                    $config['DB_HOST'],
+                    $config['DB_PORT'],
+                    $config['DB_DATABASE'],
+                    $config['DB_USERNAME'],
+                    $config['DB_PASSWORD']
+                );
+
+                // Aquí realmente hacemos la conexion
+                $conn = $db->connectDB();
+                $conn->autocommit(false);
+
+                $table = static::$table;
+
+                // Verificar si el email ya existe (excluyendo el caso del mismo empleado_id)
+                $sql = "SELECT employee_id FROM $table WHERE email = ? AND employee_id != ?";
+                $stmt = $conn->prepare($sql);
+                if (!$stmt) {
+                    echo "<script>alert('Error al preparar la consulta.');</script>";
+                    return;
+                }
+
+                // Vincular los parámetros
+                $stmt->bind_param("si", $this->email, $this->employee_id);
+                $stmt->execute();
+                $result = $stmt->get_result();
+
+                // Si hay un resultado, significa que ya existe otro registro con ese email
+                if ($result->num_rows > 0) {
+                    echo "<script>alert('Ya existe otro empleado con ese email.');</script>";
+                    $conn->rollback();
+                    return;
+                }
+
 
                 // Intenta hacer un insert si el employee_id existe 
                 $sql = "INSERT INTO $table (employee_id, first_name, last_name, email, phone_number, hire_date, job_id, salary, commission_pct, manager_id, department_id) 
@@ -92,7 +91,8 @@ class Employee extends Model
 
                 $stmt = $conn->prepare($sql);
                 if (!$stmt) {
-                    die('Error al preparar la consulta: ' . $conn->error);
+                    echo "<script>alert('Error al preparar la consulta.');</script>";
+                    return;
                 }
 
                 // Vincular los valores
@@ -125,17 +125,20 @@ class Employee extends Model
                     $conn->rollback();
                     echo "Error en afegir o modificar l'empleat: " . $stmt->error;
                 }
-            } catch (\mysqli_sql_exception $e) {
-                // Capturar cualquier excepción de MySQLi y mostrar un mensaje de error
-                echo "Error general en afegir o modificar l'empleat: " . $e->getMessage();
+            } catch (mysqli_sql_exception $e) {
+                echo "<script>alert('Error en agregar o modificar un empleado.');</script>";
+
+                if ($conn) {
+                    $conn->rollback();
+                    $db->closeDB();
+                }
+                return;
             }
 
-
         } catch (Exception $e) {
-            echo "Error general de save: " . $e->getMessage();
+            "<script>alert('Se ha producido un error.');</script>";
         } finally {
             if ($conn) {
-                // Tancar la c onnexió
                 $db->closeDB();
             }
         }
@@ -146,9 +149,7 @@ class Employee extends Model
     public function destroy(int $employee_id): void
     {
         try {
-            // Carga el fichero donde están los parámetros de configuración
             $config = Database::loadConfig('C:/temp/config.db');
-
             $db = new Database(
                 $config['DB_HOST'],
                 $config['DB_PORT'],
@@ -156,11 +157,7 @@ class Employee extends Model
                 $config['DB_USERNAME'],
                 $config['DB_PASSWORD']
             );
-
-            // Aquí realmente hacemos la conexión
             $conn = $db->connectDB();
-
-            // Desactiva el autocommit para manejar transacciones manualmente
             $conn->autocommit(false);
 
             $table = static::$table;
@@ -170,7 +167,7 @@ class Employee extends Model
             $stmt = $conn->prepare($sql);
 
             if (!$stmt) {
-                die('Error al preparar la consulta: ' . $conn->error);
+                "<script>alert('Error al preparar la consulta.');</script>";
             }
 
             // Vincular los parámetros
@@ -183,35 +180,25 @@ class Employee extends Model
 
                 $sql = "DELETE FROM $table WHERE employee_id = ?";
                 $stmt = $conn->prepare($sql);
-
-                if (!$stmt) {
-                    $conn->rollback();  // Hacer rollback si hay un error en la preparación
-                    die('Error al preparar la consulta de eliminación: ' . $conn->error);
-                }
-
-                // Vincular los valores
                 $stmt->bind_param("i", $employee_id);
+
 
                 // Ejecutar la consulta
                 if ($stmt->execute()) {
-
                     $conn->commit();
-                    echo "Empleado eliminado correctamente.";
                 } else {
-
                     $conn->rollback();
-                    echo "Error eliminando el empleado: " . $stmt->error;
+
                 }
             } else {
-                $conn->rollback();
-                echo "El empleado no existe.";
+                if ($conn) {
+                    $conn->rollback();
+                }
             }
-
-            $stmt->close();
-
-        } catch (\mysqli_sql_exception $e) {
-            $conn->rollback();
-            echo "Error en destroy: " . $e->getMessage();
+        } catch (mysqli_sql_exception $e) {
+            if ($conn) {
+                $conn->rollback();
+            }
         } finally {
             if ($conn) {
                 $db->closeDB();
@@ -241,7 +228,7 @@ class Employee extends Model
             $sql = "SELECT * FROM " . static::$table . " WHERE EMPLOYEE_ID = ?";
             $stmt = $conn->prepare($sql);
             if (!$stmt) {
-                throw new \mysqli_sql_exception("Error al preparar la consulta: " . $conn->error);
+                "<script>alert('Se ha producido un error con la consulta');</script>";
             }
 
 
@@ -261,13 +248,6 @@ class Employee extends Model
             // Debe ser en mayúsculas, así esta en la bdd sino devolverá null
             $employee_id = $data['EMPLOYEE_ID'] ?? null;
 
-
-            if ($employee_id === null) {
-                echo "<script>alert('El ID del empleado es nulo o inválido.');</script>";
-                return null;
-            }
-
-
             $employee = new self(
                 $employee_id,
                 $data['FIRST_NAME'] ?? null,
@@ -282,18 +262,18 @@ class Employee extends Model
                 $data['DEPARTMENT_ID'] ?? null
             );
 
-
-            $db->closeDB();
-
             return $employee;
-        } catch (\mysqli_sql_exception $e) {
-            echo "Error de MySQL: " . $e->getMessage();
-            return null;
+        } catch (mysqli_sql_exception $e) {
+            "<script>alert('Se ha producido un error con la consulta');</script>";
+
         } catch (Exception $e) {
-            // Otras excepciones
-            echo "Error general: " . $e->getMessage();
-            return null;
+            "<script>alert('Se ha producido un error.');</script>";
+        } finally {
+            if ($conn) {
+                $db->closeDB();
+            }
         }
+        return null;
     }
 
 
@@ -309,24 +289,25 @@ class Employee extends Model
                 $config['DB_PASSWORD']
             );
 
-            $conn = null;
-
             $conn = $db->connectDB();
 
-            // Consulta SQL para obtener el mayor `employee_id`
-            $query = "SELECT MAX(EMPLOYEE_ID) as last_id FROM employees";
+            $table = static::$table;
+
+            $query = "SELECT MAX(EMPLOYEE_ID) as last_id FROM $table";
             $result = $conn->query($query);
 
 
             if ($row = $result->fetch_assoc()) {
                 return $row['last_id'];
             } else {
-                return 0;
+                return;
             }
 
+        } catch (mysqli_sql_exception $e) {
+            "<script>alert('Se ha producido un error con la consulta');</script>";
+
         } catch (Exception $e) {
-            error_log("Error en la consulta: " . $e->getMessage());
-            return 0;
+            "<script>alert('Se ha producido un error.');</script>";
         } finally {
             if ($conn) {
                 $conn->close();

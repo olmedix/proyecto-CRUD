@@ -42,14 +42,13 @@ abstract class Model
                     }
                 }
             } catch (\mysqli_sql_exception $e) {
-                //TODO 
-                echo "Error al ejecutar la consulta: " . $e->getMessage();
+                echo "<script>alert('Error al ejecutar la consulta'); </script>";
             }
 
             // Retornar los registros obtenidos
             return $rows;
         } catch (Exception $e) {
-            echo "Error general de all: " . $e->getMessage();
+            echo "Error: " . $e->getMessage();
         } finally {
             if (isset($db) && $db) {
                 $db->closeDB();

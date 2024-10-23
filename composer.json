@@ -13,5 +13,7 @@
             "name": "juanjo"
         }
     ],
-    "require": {}
+    "require": {
+        "fakerphp/faker": "^1.23"
+    }
 }
