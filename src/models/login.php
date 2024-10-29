@@ -16,11 +16,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $_SESSION['username'] = $username;  // Inclou dades de l'usuari a '$_SESSION'
         $_SESSION['loggedin'] = true;
         $_SESSION['message'] = "¡Welcome, $username!";
-        header("Location: index.php");
+        header("Location: ../../index.php");
         exit();
     } else {
         $_SESSION['message'] = "Error: incorrect username or password.";
-        header("Location: index.php");
+        header("Location: ../../index.php");
         exit();
     }
 

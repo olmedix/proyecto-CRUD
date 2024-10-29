@@ -79,7 +79,7 @@
         <fieldset id="login__container">
             <legend>Inicia sesión</legend>
 
-            <form action="login.php" method="POST">
+            <form action="src/models/login.php" method="POST">
                 <label for="username">Usuario:</label>
                 <input type="text" id="username" name="username" required>
 

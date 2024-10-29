@@ -2,7 +2,7 @@
 
 session_start();
 if (!isset($_SESSION['loggedin'])) {
-    header("Location: index.php"); // Si no está logueado, redirigir al login
+    header("Location: ../../index.php");
     exit;
 }
 
@@ -64,7 +64,7 @@ if (isset($_GET['id'])) {
 <body>
     <div id="header">
         <h1>HR & OE Management</h1>
-        <form action="../../logout.php" method="post">
+        <form action="logout.php" method="post">
             <button type="submit">Cerrar sesión</button>
         </form>
     </div>
