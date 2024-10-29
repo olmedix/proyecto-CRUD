@@ -71,10 +71,10 @@ if (isset($_GET['id'])) {
     <div id="content">
         <div id="menu">
             <ul>
-                <li><a href="index.php">Home</a></li>
+                <li><a href="../../index.php">Home</a></li>
                 <li>
                     <ul> HR
-                        <li><a>Employees</a></li>
+                        <li><a href="./EmployeeList.php">Employees</a></li>
                         <li><a href="departments.php">Departments</a></li>
                         <li><a href="jobs.php">Jobs</a></li>
                         <li><a href="locations.php">Locations</a></li>

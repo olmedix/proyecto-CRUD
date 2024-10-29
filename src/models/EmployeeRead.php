@@ -116,7 +116,7 @@ try {
     <div id="content">
         <div id="menu">
             <ul>
-                <li><a href="../index.php">Home</a></li>
+                <li><a href="../../index.php">Home</a></li>
                 <li>
                     <ul> HR
                         <li><a href="./EmployeeList.php">Employees</a></li>
