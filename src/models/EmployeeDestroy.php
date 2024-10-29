@@ -8,7 +8,7 @@ if (!isset($_SESSION['loggedin'])) {
 
 require '../../vendor/autoload.php';
 
-use Juanjo\Www\models\Employee;
+use models\Employee;
 
 if (isset($_GET['id'])) {
     $employeeId = (int) $_GET['id'];

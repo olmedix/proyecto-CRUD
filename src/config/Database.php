@@ -1,7 +1,7 @@
 <?php
 
-namespace Juanjo\Www\config;
-require '../../vendor/autoload.php';
+namespace config;
+
 
 class Database
 {
@@ -48,7 +48,6 @@ class Database
     }
 
     // Método para conectarse a la base de datos
-    // Mètode per connectar-se a la base de dades
     public function connectDB(): \mysqli
     {
         $this->conn = new \mysqli($this->host, $this->username, $this->password, $this->database, $this->port);

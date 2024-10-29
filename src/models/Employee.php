@@ -1,12 +1,8 @@
 <?php
 
-namespace Juanjo\Www\models;
-require '../../vendor/autoload.php';
+namespace models;
 
-
-use Juanjo\Www\config\Database;
-use Exception;
-use mysqli_sql_exception;
+use config\Database;
 
 class Employee extends Model
 {
@@ -125,7 +121,7 @@ class Employee extends Model
                     $conn->rollback();
                     echo "Error en afegir o modificar l'empleat: " . $stmt->error;
                 }
-            } catch (mysqli_sql_exception $e) {
+            } catch (\mysqli_sql_exception $e) {
                 echo "<script>alert('Error en agregar o modificar un empleado.');</script>";
 
                 if ($conn) {
@@ -135,7 +131,7 @@ class Employee extends Model
                 return;
             }
 
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             "<script>alert('Se ha producido un error.');</script>";
         } finally {
             if ($conn) {
@@ -427,4 +423,3 @@ class Employee extends Model
     }
 
 }
-

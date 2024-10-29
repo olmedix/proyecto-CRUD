@@ -8,8 +8,8 @@ if (!isset($_SESSION['loggedin'])) {
 
 require '../../vendor/autoload.php';
 
-use Juanjo\Www\config\Database;
-use Juanjo\Www\models\Employee;
+use config\Database;
+use models\Employee;
 
 try {
 
@@ -187,12 +187,13 @@ try {
                             <td><?= $employee->getDepartmentId() ?></td>
                         </tr>
                         <tr>
-                            <th>Nombre del Departamento</th> <!-- Nueva fila -->
-                            <td><?= $department_name ?></td> <!-- Mostrar nombre del departamento -->
+                            <th>Nombre del Departamento</th>
+                            <td><?= $department_name ?></td>
                         </tr>
                     </table>
                 <?php else: ?>
-                    <p>Empleado no encontrado.</p>
+                    echo "
+                    <script>alert('Empleado no encontrado.');</script>";
                 <?php endif; ?>
                 <a href="EmployeeList.php" class="btn btn-primary">Volver a la lista de empleados</a>
             </div>

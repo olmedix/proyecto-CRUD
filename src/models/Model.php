@@ -1,11 +1,8 @@
 <?php
 
-namespace Juanjo\Www\models;
-require '../../vendor/autoload.php';
+namespace models;
 
-
-use Juanjo\Www\config\Database;
-use Exception;
+use config\Database;
 
 abstract class Model
 {
@@ -47,7 +44,7 @@ abstract class Model
 
             // Retornar los registros obtenidos
             return $rows;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             echo "Error: " . $e->getMessage();
         } finally {
             if (isset($db) && $db) {
@@ -56,4 +53,3 @@ abstract class Model
         }
     }
 }
-

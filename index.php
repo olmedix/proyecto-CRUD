@@ -64,6 +64,9 @@
         </div>
 
         <?php
+        require "vendor/autoload.php";
+
+
         session_start();
 
         // Verifica si hay un mensaje y lo muestra

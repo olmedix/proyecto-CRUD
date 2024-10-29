@@ -67,9 +67,10 @@ if (!isset($_SESSION['loggedin'])) {
 
             <!-- CODIGO PHP INTERNO -->
             <?php
-            require '../../vendor/autoload.php';
 
-            use Juanjo\Www\models\Employee;
+
+            use models\Employee;
+            require "../../vendor/autoload.php";
 
             $employees = Employee::all();
 

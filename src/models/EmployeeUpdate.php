@@ -67,9 +67,7 @@ if (!isset($_SESSION['loggedin'])) {
             <?php
             require '../../vendor/autoload.php';
 
-
-
-            use Juanjo\Www\models\Employee;
+            use models\Employee;
             use Faker\Factory as FakerFactory;
 
             $faker = FakerFactory::create();
