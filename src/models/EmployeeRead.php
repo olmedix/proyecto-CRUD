@@ -62,18 +62,23 @@ try {
             );
             $department_name = $employeeData['department_name'];  // Almacenar el nombre del departamento
         } else {
-            echo "Empleado no encontrado.";
-            exit;
+            echo "
+                    <script>alert('Empleado no encontrado.');</script>";
+            exit();
         }
-
-        $stmt->close();
-        $db->closeDB();
     } else {
-        echo "ID de empleado no ha sido proporcionado.";
-        exit;
+        echo "<script>alert('ID del empleado no ha sido proporcionado');</script>";
+        exit();
     }
+} catch (\mysqli_sql_exception $e) {
+    echo "<script>alert('Error en agregar o modificar un empleado.');</script>";
+
 } catch (Exception $e) {
     echo 'Error general EmployeeRead: ' . $e->getMessage();
+} finally {
+    if ($db) {
+        $db->closeDB();
+    }
 }
 ?>
 

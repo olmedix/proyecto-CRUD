@@ -123,11 +123,6 @@ class Employee extends Model
                 }
             } catch (\mysqli_sql_exception $e) {
                 echo "<script>alert('Error en agregar o modificar un empleado.');</script>";
-
-                if ($conn) {
-                    $conn->rollback();
-                    $db->closeDB();
-                }
                 return;
             }
 
@@ -191,7 +186,7 @@ class Employee extends Model
                     $conn->rollback();
                 }
             }
-        } catch (mysqli_sql_exception $e) {
+        } catch (\mysqli_sql_exception $e) {
             if ($conn) {
                 $conn->rollback();
             }
@@ -259,10 +254,10 @@ class Employee extends Model
             );
 
             return $employee;
-        } catch (mysqli_sql_exception $e) {
+        } catch (\mysqli_sql_exception $e) {
             "<script>alert('Se ha producido un error con la consulta');</script>";
 
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             "<script>alert('Se ha producido un error.');</script>";
         } finally {
             if ($conn) {
@@ -299,10 +294,10 @@ class Employee extends Model
                 return;
             }
 
-        } catch (mysqli_sql_exception $e) {
+        } catch (\mysqli_sql_exception $e) {
             "<script>alert('Se ha producido un error con la consulta');</script>";
 
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             "<script>alert('Se ha producido un error.');</script>";
         } finally {
             if ($conn) {

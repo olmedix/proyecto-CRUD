@@ -181,8 +181,9 @@ if (!isset($_SESSION['loggedin'])) {
 
                     <label class="form__label" for="commission_pct">Commission Percentage:</label>
                     <input class="form__input" type="number" step="0.01" name="commission_pct" id="commission_pct"
-                        value="<?= $employee->getCommissionPct() ?? null ?>" pattern="^\d{1,6}(\.\d{1,2})?$"
-                        title="Introduce un número de hasta 2 decimales.">
+                        value="<?= $employee->getCommissionPct() ?? null ?>" pattern="^\d{1,2}(\.\d{1,2})?$"
+                        title="Introduce un número de hasta 2 dígitos enteros y hasta 2 decimales.">
+
 
                     <label class="form__label" for="manager_id">Manager ID:</label>
                     <select class="form__input" name="manager_id" id="manager_id">
