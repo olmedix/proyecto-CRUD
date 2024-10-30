@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['loggedin'])) {
-    header("Location: ../../index.php"); // Si no está logueado, redirigir al login
+    header("Location: ../../index.php");
     exit;
 }
 
@@ -52,7 +52,7 @@ if (!isset($_SESSION['loggedin'])) {
                     <ul> OE
                         <li><a href="warehouses.php">Warehouses</a></li>
                         <li><a href="categories.php">Categories</a></li>
-                        <li><a href="customers.php">Customers</a></li>
+                        <li><a>Customers</a></li>
                         <li><a href="products.php">Products</a></li>
                         <li><a href="orders.php">Orders</a></li>
                     </ul>
@@ -61,20 +61,20 @@ if (!isset($_SESSION['loggedin'])) {
         </div>
 
         <div id="section">
-            <h3 class="section__title">Employees</h3>
+            <h3 class="section__title">Customers</h3>
 
-            <div class="section__add"> <a href="./EmployeeUpdate.php">Add employee</a></div>
+            <div class="section__add"> <a href="./CustomerUpdate.php">Add customer</a></div>
 
             <!-- CODIGO PHP INTERNO -->
             <?php
 
 
-            use models\Employee;
+            use models\Customer;
             require "../../vendor/autoload.php";
 
-            $employees = Employee::all();
+            $customers = Customer::all();
 
-            if (count($employees) > 0) {
+            if (count($customers) > 0) {
                 echo '<table class="table table-bordered table-striped">';
                 echo '<thead>';
                 echo '<tr>';
@@ -83,32 +83,32 @@ if (!isset($_SESSION['loggedin'])) {
                 echo '<th>Last Name</th>';
                 echo '<th>Email</th>';
                 echo '<th>Phone Number</th>';
-                echo '<th>Hire Date</th>';
-                echo '<th>Job ID</th>';
-                echo '<th>Salary</th>';
+                echo '<th>Date of Birth</th>';
+                echo '<th>Employee ID</th>';
+                echo '<th>Marital status</th>';
                 echo '<th>Actions</th>';
                 echo '</tr>';
                 echo '</thead>';
                 echo '<tbody>';
 
 
-                foreach ($employees as $employee) {
+                foreach ($customers as $custom) {
 
-                    $employee->getEmployeeId();
+                    $custom->getCustomerId();
 
                     echo '<tr>';
-                    echo '<td>' . $employee->getEmployeeId() . '</td>';
-                    echo '<td>' . $employee->getFirstName() . '</td>';
-                    echo '<td>' . $employee->getLastName() . '</td>';
-                    echo '<td>' . $employee->getEmail() . '</td>';
-                    echo '<td>' . $employee->getPhoneNumber() . '</td>';
-                    echo '<td>' . $employee->getHireDate() . '</td>';
-                    echo '<td>' . $employee->getJobId() . '</td>';
-                    echo '<td>' . $employee->getSalary() . '</td>';
+                    echo '<td>' . $custom->getCustomerId() . '</td>';
+                    echo '<td>' . $custom->getCustFirstName() . '</td>';
+                    echo '<td>' . $custom->getCustLastName() . '</td>';
+                    echo '<td>' . $custom->getCustEmail() . '</td>';
+                    echo '<td>' . $custom->getPhoneNumbers() . '</td>';
+                    echo '<td>' . $custom->getDateOfBirth() . '</td>';
+                    echo '<td>' . $custom->getAccountMgrId() . '</td>';
+                    echo '<td>' . $custom->getMaritalStatus() . '</td>';
                     echo '<td>';
-                    echo '<a href="./EmployeeRead.php?id=' . $employee->getEmployeeId() . '" class="mr-2" title="View File" data-toggle="tooltip"><span class="fa fa-eye"></span></a>' .
-                        '<a href="./EmployeeUpdate.php?id=' . $employee->getEmployeeId() . '" class="mr-2" title="Update File" data-toggle="tooltip"><span class="fa fa-pencil"></span></a>' .
-                        '<a href="./EmployeeDestroy.php?id=' . $employee->getEmployeeId() . '" class="mr-2" title="Delete File" data-toggle="tooltip"><span class="fa fa-trash"></span></a>' .
+                    echo '<a href="./EmployeeRead.php?id=' . $custom->getCustomerId() . '" class="mr-2" title="View File" data-toggle="tooltip"><span class="fa fa-eye"></span></a>' .
+                        '<a href="./EmployeeUpdate.php?id=' . $custom->getCustomerId() . '" class="mr-2" title="Update File" data-toggle="tooltip"><span class="fa fa-pencil"></span></a>' .
+                        '<a href="./EmployeeDestroy.php?id=' . $custom->getCustomerId() . '" class="mr-2" title="Delete File" data-toggle="tooltip"><span class="fa fa-trash"></span></a>' .
                         '</td>';
                     echo '</tr>';
                 }
@@ -116,8 +116,7 @@ if (!isset($_SESSION['loggedin'])) {
                 echo '</tbody>';
                 echo '</table>';
             } else {
-                echo "<script>alert('No employees found');</script>";
-                ;
+                echo "<script>alert('No customers found');</script>";
             }
             ?>
 
