@@ -13,13 +13,10 @@ use models\Customer;
 
 try {
 
-    $customer = null;
-
     // Verifica que se ha pasado un id.
     if (isset($_GET['id'])) {
         $customer_id = intval($_GET['id']);
 
-        // Cargar la configuración de la base de datos
         $config = Database::loadConfig('C:/temp/config.db');
         $db = new Database(
             $config['DB_HOST'],
@@ -28,41 +25,43 @@ try {
             $config['DB_USERNAME'],
             $config['DB_PASSWORD']
         );
-
-        // Obtener la conexión a la base de datos
         $conn = $db->connectDB();
 
-        $customers = Customer::all();
+        $sql = "SELECT * FROM customers WHERE CUSTOMER_ID = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $customer_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
-        // Verificar si se encontró un empleado con el ID proporcionado
+        // Verificar si se encontró un cliente con el ID proporcionado
         if ($result->num_rows > 0) {
+
             $customerData = $result->fetch_assoc();
 
-            // Crear una instancia del empleado
+            // Crear una instancia del cliente
             $customer = new Customer(
-                $customerData['customer_id'],
-                $customerData['cust_first_name'],
-                $customerData['cust_last_name'],
-                $customerData['cust_street_address'],
-                $customerData['cust_postal_code'],
-                $customerData['cust_city'],
-                $customerData['cust_state'],
-                $customerData['cust_country'],
-                $customerData['phone_numbers'],
-                $customerData['nls_language'],
-                $customerData['nls_territory'],
-                $customerData['credit_limit'],
-                $customerData['cust_email'],
-                $customerData['account_mgr_id'],
-                $customerData['cust_geo_location'],
-                $customerData['date_of_birth'],
-                $customerData['marital_status'],
-                $customerData['gender'],
-                $customerData['income_level']
+                customer_id: $customerData['CUSTOMER_ID'],
+                cust_first_name: $customerData['CUST_FIRST_NAME'],
+                cust_last_name: $customerData['CUST_LAST_NAME'],
+                cust_street_address: $customerData['CUST_STREET_ADDRESS'],
+                cust_postal_code: $customerData['CUST_POSTAL_CODE'],
+                cust_city: $customerData['CUST_CITY'],
+                cust_state: $customerData['CUST_STATE'],
+                cust_country: $customerData['CUST_COUNTRY'],
+                phone_numbers: $customerData['PHONE_NUMBERS'],
+                nls_language: $customerData['NLS_LANGUAGE'],
+                nls_territory: $customerData['NLS_TERRITORY'],
+                credit_limit: $customerData['CREDIT_LIMIT'],
+                cust_email: $customerData['CUST_EMAIL'],
+                account_mgr_id: $customerData['ACCOUNT_MGR_ID'],
+                cust_geo_location: json_encode($customerData['CUST_GEO_LOCATION']),  // Usar json_encode para almacenar la ubicación geográfica
+                date_of_birth: $customerData['DATE_OF_BIRTH'],
+                marital_status: $customerData['MARITAL_STATUS'],
+                gender: $customerData['GENDER'],
+                income_level: $customerData['INCOME_LEVEL']
             );
         } else {
-            echo "
-                    <script>alert('Cliente no encontrado.');</script>";
+            echo "<script>alert('Cliente no encontrado.');</script>";
             exit();
         }
     } else {
@@ -72,7 +71,7 @@ try {
 } catch (\mysqli_sql_exception $e) {
     echo "<script>alert('Error en agregar o modificar un cliente.');</script>";
 
-} catch (Exception $e) {
+} catch (\Exception $e) {
     echo "<script>alert('Error general ClienteRead. ');</script>";
 } finally {
     if ($db) {
@@ -143,63 +142,91 @@ try {
         <div id="section">
 
             <div class="container">
-                <h1>Employee details</h1>
-                <?php if ($employee !== null): ?>
+                <h1>Customer details</h1>
+                <?php if ($customer !== null): ?>
                     <table class="table table-bordered">
                         <tr>
                             <th>ID</th>
-                            <td><?= $employee->getEmployeeId() ?></td>
+                            <td><?= $customer->getCustomerId() ?></td>
                         </tr>
                         <tr>
                             <th>Nombre</th>
-                            <td><?= $employee->getFirstName() ?></td>
+                            <td><?= $customer->getCustFirstName() ?></td>
                         </tr>
                         <tr>
                             <th>Apellido</th>
-                            <td><?= $employee->getLastName() ?></td>
+                            <td><?= $customer->getCustLastName() ?></td>
                         </tr>
                         <tr>
-                            <th>Email</th>
-                            <td><?= $employee->getEmail() ?></td>
+                            <th>Dirección</th>
+                            <td><?= $customer->getCustStreetAddress() ?></td>
+                        </tr>
+                        <tr>
+                            <th>Codigo Postal</th>
+                            <td><?= $customer->getCustPostalCode() ?></td>
+                        </tr>
+                        <tr>
+                            <th>Ciudad</th>
+                            <td><?= $customer->getCustCity() ?></td>
+                        </tr>
+                        <tr>
+                            <th>Estado</th>
+                            <td><?= $customer->getCustState() ?></td>
+                        </tr>
+                        <tr>
+                            <th>País</th>
+                            <td><?= $customer->getCustCountry() ?></td>
                         </tr>
                         <tr>
                             <th>Teléfono</th>
-                            <td><?= $employee->getPhoneNumber() ?></td>
+                            <td><?= $customer->getPhoneNumbers() ?></td>
                         </tr>
                         <tr>
-                            <th>Fecha de Contratación</th>
-                            <td><?= $employee->getHireDate() ?></td>
+                            <th>Idioma</th>
+                            <td><?= $customer->getNlsLanguage() ?></td>
                         </tr>
                         <tr>
-                            <th>ID del Trabajo</th>
-                            <td><?= $employee->getJobId() ?></td>
+                            <th>Territorio</th>
+                            <td><?= $customer->getNlsTerritory() ?></td>
                         </tr>
                         <tr>
-                            <th>Salario</th>
-                            <td><?= $employee->getSalary() ?></td>
+                            <th>Límite credito</th>
+                            <td><?= $customer->getCreditLimit() ?></td>
                         </tr>
                         <tr>
-                            <th>Porcentaje de Comisión</th>
-                            <td><?= $employee->getCommissionPct() ?></td>
+                            <th>Email</th>
+                            <td><?= $customer->getCustEmail() ?></td>
                         </tr>
                         <tr>
-                            <th>ID del Gerente</th>
-                            <td><?= $employee->getManagerId() ?></td>
+                            <th>ID empleado</th>
+                            <td><?= $customer->getAccountMgrId() ?></td>
                         </tr>
                         <tr>
-                            <th>ID del Departamento</th>
-                            <td><?= $employee->getDepartmentId() ?></td>
+                            <th>Geolocalización</th>
+                            <td><?= $customer->getCustGeoLocation() ?></td>
                         </tr>
                         <tr>
-                            <th>Nombre del Departamento</th>
-                            <td><?= $department_name ?></td>
+                            <th>Fecha Nacimiento</th>
+                            <td><?= $customer->getDateOfBirth() ?></td>
                         </tr>
+                        <tr>
+                            <th>Estado civil</th>
+                            <td><?= $customer->getMaritalStatus() ?></td>
+                        </tr>
+                        <tr>
+                            <th>Sexo</th>
+                            <td><?= $customer->getGender() ?></td>
+                        </tr>
+                        <tr>
+                            <th>Nivel de ingresos</th>
+                            <td><?= $customer->getIncomeLevel() ?></td>
+                        </tr>
+
                     </table>
                 <?php else: ?>
-                    echo "
-                    <script>alert('Empleado no encontrado.');</script>";
+                    <script>alert('Cliente no encontrado.');</script>
                 <?php endif; ?>
-                <a href="EmployeeList.php" class="btn btn-primary">Volver a la lista de empleados</a>
+                <a href="CustomerList.php" class="btn btn-primary">Volver a la lista de clientes</a>
             </div>
         </div>
     </div>

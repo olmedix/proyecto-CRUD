@@ -13,8 +13,6 @@ use models\Employee;
 
 try {
 
-    $employee = null;
-
     // Verifica que se ha pasado un id.
     if (isset($_GET['id'])) {
         $employee_id = intval($_GET['id']);
@@ -73,7 +71,7 @@ try {
 } catch (\mysqli_sql_exception $e) {
     echo "<script>alert('Error en agregar o modificar un empleado.');</script>";
 
-} catch (Exception $e) {
+} catch (\Exception $e) {
     echo 'Error general EmployeeRead: ' . $e->getMessage();
 } finally {
     if ($db) {

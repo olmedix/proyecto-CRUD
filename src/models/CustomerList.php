@@ -52,7 +52,7 @@ if (!isset($_SESSION['loggedin'])) {
                     <ul> OE
                         <li><a href="warehouses.php">Warehouses</a></li>
                         <li><a href="categories.php">Categories</a></li>
-                        <li><a>Customers</a></li>
+                        <li><a href="./CustomerList.php">Customers</a></li>
                         <li><a href="products.php">Products</a></li>
                         <li><a href="orders.php">Orders</a></li>
                     </ul>
