@@ -9,15 +9,15 @@ if (!isset($_SESSION['loggedin'])) {
 require '../../vendor/autoload.php';
 
 use config\Database;
-use models\Employee;
+use models\Customer;
 
 try {
 
-    $employee = null;
+    $customer = null;
 
     // Verifica que se ha pasado un id.
     if (isset($_GET['id'])) {
-        $employee_id = intval($_GET['id']);
+        $customer_id = intval($_GET['id']);
 
         // Cargar la configuración de la base de datos
         $config = Database::loadConfig('C:/temp/config.db');
@@ -32,49 +32,48 @@ try {
         // Obtener la conexión a la base de datos
         $conn = $db->connectDB();
 
-        // Consultar los datos del empleado por ID
-        $sql = "SELECT e.employee_id, e.first_name, e.last_name, e.email, e.phone_number, e.hire_date, e.job_id, e.salary, e.commission_pct, e.manager_id, e.department_id, d.department_name
-                FROM employees e
-                INNER JOIN departments d ON e.department_id = d.department_id
-                WHERE e.employee_id = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("i", $employee_id);
-        $stmt->execute();
-        $result = $stmt->get_result();
+        $customers = Customer::all();
 
         // Verificar si se encontró un empleado con el ID proporcionado
         if ($result->num_rows > 0) {
-            $employeeData = $result->fetch_assoc();
+            $customerData = $result->fetch_assoc();
 
             // Crear una instancia del empleado
-            $employee = new Employee(
-                $employeeData['employee_id'],
-                $employeeData['first_name'],
-                $employeeData['last_name'],
-                $employeeData['email'],
-                $employeeData['phone_number'],
-                $employeeData['hire_date'],
-                $employeeData['job_id'],
-                $employeeData['salary'],
-                $employeeData['commission_pct'],
-                $employeeData['manager_id'],
-                $employeeData['department_id']
+            $customer = new Customer(
+                $customerData['customer_id'],
+                $customerData['cust_first_name'],
+                $customerData['cust_last_name'],
+                $customerData['cust_street_address'],
+                $customerData['cust_postal_code'],
+                $customerData['cust_city'],
+                $customerData['cust_state'],
+                $customerData['cust_country'],
+                $customerData['phone_numbers'],
+                $customerData['nls_language'],
+                $customerData['nls_territory'],
+                $customerData['credit_limit'],
+                $customerData['cust_email'],
+                $customerData['account_mgr_id'],
+                $customerData['cust_geo_location'],
+                $customerData['date_of_birth'],
+                $customerData['marital_status'],
+                $customerData['gender'],
+                $customerData['income_level']
             );
-            $department_name = $employeeData['department_name'];  // Almacenar el nombre del departamento
         } else {
             echo "
-                    <script>alert('Empleado no encontrado.');</script>";
+                    <script>alert('Cliente no encontrado.');</script>";
             exit();
         }
     } else {
-        echo "<script>alert('ID del empleado no ha sido proporcionado');</script>";
+        echo "<script>alert('ID del cliente no ha sido proporcionado');</script>";
         exit();
     }
 } catch (\mysqli_sql_exception $e) {
-    echo "<script>alert('Error en agregar o modificar un empleado.');</script>";
+    echo "<script>alert('Error en agregar o modificar un cliente.');</script>";
 
 } catch (Exception $e) {
-    echo 'Error general EmployeeRead: ' . $e->getMessage();
+    echo "<script>alert('Error general ClienteRead. ');</script>";
 } finally {
     if ($db) {
         $db->closeDB();

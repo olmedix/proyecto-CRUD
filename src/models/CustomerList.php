@@ -42,7 +42,7 @@ if (!isset($_SESSION['loggedin'])) {
                 <li><a href="../../index.php">Home</a></li>
                 <li>
                     <ul> HR
-                        <li><a>Employees</a></li>
+                        <li><a href="./EmployeeList.php">Employees</a></li>
                         <li><a href="departments.php">Departments</a></li>
                         <li><a href="jobs.php">Jobs</a></li>
                         <li><a href="locations.php">Locations</a></li>
@@ -106,9 +106,9 @@ if (!isset($_SESSION['loggedin'])) {
                     echo '<td>' . $custom->getAccountMgrId() . '</td>';
                     echo '<td>' . $custom->getMaritalStatus() . '</td>';
                     echo '<td>';
-                    echo '<a href="./EmployeeRead.php?id=' . $custom->getCustomerId() . '" class="mr-2" title="View File" data-toggle="tooltip"><span class="fa fa-eye"></span></a>' .
-                        '<a href="./EmployeeUpdate.php?id=' . $custom->getCustomerId() . '" class="mr-2" title="Update File" data-toggle="tooltip"><span class="fa fa-pencil"></span></a>' .
-                        '<a href="./EmployeeDestroy.php?id=' . $custom->getCustomerId() . '" class="mr-2" title="Delete File" data-toggle="tooltip"><span class="fa fa-trash"></span></a>' .
+                    echo '<a href="./CustomerRead.php?id=' . $custom->getCustomerId() . '" class="mr-2" title="View File" data-toggle="tooltip"><span class="fa fa-eye"></span></a>' .
+                        '<a href="./CustomerUpdate.php?id=' . $custom->getCustomerId() . '" class="mr-2" title="Update File" data-toggle="tooltip"><span class="fa fa-pencil"></span></a>' .
+                        '<a href="./CustomerDestroy.php?id=' . $custom->getCustomerId() . '" class="mr-2" title="Delete File" data-toggle="tooltip"><span class="fa fa-trash"></span></a>' .
                         '</td>';
                     echo '</tr>';
                 }
