@@ -64,7 +64,6 @@ class Employee extends Model
                 // Si hay un resultado, significa que ya existe otro registro con ese email
                 if ($result->num_rows > 0) {
                     echo "<script>alert('Ya existe otro empleado con ese email.');</script>";
-                    $conn->rollback();
                     return;
                 }
 
@@ -119,7 +118,7 @@ class Employee extends Model
                     }
                 } else {
                     $conn->rollback();
-                    echo "Error en afegir o modificar l'empleat: " . $stmt->error;
+                    echo "<script>alert('Error al agregar o modificar un empleado.');</script>";
                 }
             } catch (\mysqli_sql_exception $e) {
                 echo "<script>alert('Error en agregar o modificar un empleado.');</script>";

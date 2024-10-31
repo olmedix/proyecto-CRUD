@@ -31,8 +31,271 @@ class Customer extends Model
     ) {
     }
 
-
     protected static $table = 'customers';
+
+
+    public function save(): void
+    {
+
+        try {
+            $config = Database::loadConfig('C:/temp/config.db');
+
+            $db = new Database(
+                $config['DB_HOST'],
+                $config['DB_PORT'],
+                $config['DB_DATABASE'],
+                $config['DB_USERNAME'],
+                $config['DB_PASSWORD']
+            );
+            // Aquí realmente hacemos la conexion
+            $conn = $db->connectDB();
+            $conn->autocommit(false);
+
+            $table = static::$table;
+
+            // Verificar si el email ya existe (excluyendo el caso del mismo empleado_id)
+            $sql = "SELECT customer_id FROM $table WHERE cust_email = ? AND customer_id != ?";
+            $stmt = $conn->prepare($sql);
+            if (!$stmt) {
+                echo "<script>alert('Error al preparar la consulta.');</script>";
+                return;
+            }
+            $stmt->bind_param("si", $this->cust_email, $this->customer_id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            // Si hay un resultado, significa que ya existe otro registro con ese email
+            if ($result->num_rows > 0) {
+                echo "<script>alert('Ya existe otro cliente con ese email.');</script>";
+                return;
+            }
+
+            $sql = "INSERT INTO $table (CUSTOMER_ID, 
+    CUST_FIRST_NAME, 
+    CUST_LAST_NAME, 
+    CUST_STREET_ADDRESS, 
+    CUST_POSTAL_CODE, 
+    CUST_CITY, 
+    CUST_STATE, 
+    CUST_COUNTRY, 
+    PHONE_NUMBERS, 
+    NLS_LANGUAGE, 
+    NLS_TERRITORY, 
+    CREDIT_LIMIT, 
+    CUST_EMAIL, 
+    ACCOUNT_MGR_ID, 
+    CUST_GEO_LOCATION, 
+    DATE_OF_BIRTH, 
+    MARITAL_STATUS, 
+    GENDER, 
+    INCOME_LEVEL
+) VALUES (
+    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+) ON DUPLICATE KEY UPDATE
+    CUST_LAST_NAME =VALUES(CUST_FIRST_NAME), 
+    CUST_STREET_ADDRESS =VALUES(CUST_LAST_NAME), 
+    CUST_POSTAL_CODE =VALUES(CUST_STREET_ADDRESS), 
+    CUST_CITY =VALUES(CUST_CITY), 
+    CUST_STATE =VALUES(CUST_STATE), 
+    CUST_COUNTRY =VALUES(CUST_COUNTRY), 
+    PHONE_NUMBERS =VALUES(PHONE_NUMBERS), 
+    NLS_LANGUAGE =VALUES(NLS_LANGUAGE), 
+    NLS_TERRITORY =VALUES(NLS_TERRITORY), 
+    CREDIT_LIMIT =VALUES(CREDIT_LIMIT), 
+    CUST_EMAIL =VALUES(CUST_EMAIL), 
+    ACCOUNT_MGR_ID =VALUES(ACCOUNT_MGR_ID), 
+    CUST_GEO_LOCATION =VALUES(CUST_GEO_LOCATION), 
+    DATE_OF_BIRTH =VALUES(DATE_OF_BIRTH), 
+    MARITAL_STATUS =VALUES(MARITAL_STATUS), 
+    GENDER =VALUES(GENDER), 
+    INCOME_LEVEL =VALUES(INCOME_LEVEL)
+";
+            $stmt = $conn->prepare($sql);
+            if (!$stmt) {
+                echo "<script>alert('Error al preparar la consulta.');</script>";
+                return;
+            }
+            $stmt->bind_param(
+                "issssssssssdsisssss",
+                $customer_id,
+                $cust_first_name,
+                $cust_last_name,
+                $cust_street_address,
+                $cust_postal_code,
+                $cust_city,
+                $cust_state,
+                $cust_country,
+                $phone_numbers,
+                $nls_language,
+                $nls_territory,
+                $credit_limit,
+                $cust_email,
+                $account_mgr_id,
+                $cust_geo_location,
+                $date_of_birth,
+                $marital_status,
+                $gender,
+                $income_level
+            );
+
+            if ($stmt->execute()) {
+                if ($stmt->affected_rows > 0) {
+                    $conn->commit();
+                    echo '<p style="font-size: 20px; color: blue; font-weight: bold;">Employee successfully registered.</p>';
+
+                } else {
+                    $conn->rollback();
+                    echo '<p style="font-size: 20px; color: red; font-weight: bold;">There was an error registering the employee.</p>';
+                }
+            } else {
+                $conn->rollback();
+                echo "<script>alert('Error al agregar o modificar un cliente.');</script>";
+            }
+
+        } catch (\mysqli_sql_exception $e) {
+            echo "<script>alert('Error en agregar o modificar un empleado.');</script>";
+            return;
+        } catch (\Exception $e) {
+            "<script>alert('Se ha producido un error general en save.');</script>";
+        } finally {
+            if ($conn) {
+                $db->closeDB();
+            }
+        }
+
+    }
+
+    public static function findById(int $id)
+    {
+
+        try {
+
+            $config = Database::loadConfig('C:/temp/config.db');
+            $db = new Database(
+                $config['DB_HOST'],
+                $config['DB_PORT'],
+                $config['DB_DATABASE'],
+                $config['DB_USERNAME'],
+                $config['DB_PASSWORD']
+            );
+            $conn = $db->connectDB();
+
+
+            $sql = "SELECT * FROM " . static::$table . " WHERE CUSTOMER_ID = ?";
+            $stmt = $conn->prepare($sql);
+            if (!$stmt) {
+                "<script>alert('Se ha producido un error con la consulta');</script>";
+            }
+
+
+            $stmt->bind_param("i", $id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            // Verificar si se encontró el empleado
+            if ($result->num_rows === 0) {
+                echo "<script>alert('No se encontró ningún cliente con ID $id');</script>";
+                return null;
+            }
+
+            $customerData = $result->fetch_assoc();
+
+            $customer_id = $customerData['CUSTOMER_ID'];
+
+            $customer = new Customer(
+                customer_id: $customer_id,
+                cust_first_name: $customerData['CUST_FIRST_NAME'],
+                cust_last_name: $customerData['CUST_LAST_NAME'],
+                cust_street_address: $customerData['CUST_STREET_ADDRESS'],
+                cust_postal_code: $customerData['CUST_POSTAL_CODE'],
+                cust_city: $customerData['CUST_CITY'],
+                cust_state: $customerData['CUST_STATE'],
+                cust_country: $customerData['CUST_COUNTRY'],
+                phone_numbers: $customerData['PHONE_NUMBERS'],
+                nls_language: $customerData['NLS_LANGUAGE'],
+                nls_territory: $customerData['NLS_TERRITORY'],
+                credit_limit: $customerData['CREDIT_LIMIT'],
+                cust_email: $customerData['CUST_EMAIL'],
+                account_mgr_id: $customerData['ACCOUNT_MGR_ID'],
+                cust_geo_location: json_encode($customerData['CUST_GEO_LOCATION']),  // Usar json_encode para almacenar la ubicación geográfica
+                date_of_birth: $customerData['DATE_OF_BIRTH'],
+                marital_status: $customerData['MARITAL_STATUS'],
+                gender: $customerData['GENDER'],
+                income_level: $customerData['INCOME_LEVEL']
+            );
+
+            return $customer;
+        } catch (\mysqli_sql_exception $e) {
+            "<script>alert('Se ha producido un error con la consulta');</script>";
+
+        } catch (\Exception $e) {
+            "<script>alert('Se ha producido un error.');</script>";
+        } finally {
+            if ($conn) {
+                $db->closeDB();
+            }
+        }
+        return null;
+    }
+
+    public static function getLastCustomerId()
+    {
+        try {
+            $config = Database::loadConfig('C:/temp/config.db');
+            $db = new Database(
+                $config['DB_HOST'],
+                $config['DB_PORT'],
+                $config['DB_DATABASE'],
+                $config['DB_USERNAME'],
+                $config['DB_PASSWORD']
+            );
+
+            $conn = $db->connectDB();
+
+            $table = static::$table;
+
+            $query = "SELECT MAX(CUSTOMER_ID) as last_id FROM $table";
+            $result = $conn->query($query);
+
+
+            if ($row = $result->fetch_assoc()) {
+                return $row['last_id'];
+            } else {
+                return;
+            }
+
+        } catch (\mysqli_sql_exception $e) {
+            "<script>alert('Se ha producido un error con la consulta');</script>";
+
+        } catch (\Exception $e) {
+            "<script>alert('Se ha producido un error.');</script>";
+        } finally {
+            if ($conn) {
+                $conn->close();
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
