@@ -52,7 +52,7 @@ if (!isset($_SESSION['loggedin'])) {
                     <ul> OE
                         <li><a href="warehouses.php">Warehouses</a></li>
                         <li><a href="categories.php">Categories</a></li>
-                        <li><a href="./Customers.php">Customers</a></li>
+                        <li><a href="./CustomerList.php">Customers</a></li>
                         <li><a href="products.php">Products</a></li>
                         <li><a href="orders.php">Orders</a></li>
                     </ul>
@@ -92,8 +92,8 @@ if (!isset($_SESSION['loggedin'])) {
                 $customer->setCreditLimit(!empty($_POST['CREDIT']) ? (int) $_POST['CREDIT'] : null);
                 $customer->setAccountMgrId(!empty($_POST['MGR_ID']) ? (int) $_POST['MGR_ID'] : null);
                 $customer->setCustGeoLocation(!empty($_POST['LOCATION']) ? (int) $_POST['LOCATION'] : null);
-                $customer->setDateOfBirth(!empty($_POST['BIRTH']) ? (int) $_POST['BIRTH'] : null);
-                $customer->setMaritalStatus(!empty($_POST['MARITAL_STATUS']) ? (int) $_POST['MARITAL_STATUS'] : null);
+                $customer->setDateOfBirth(!empty($_POST['BIRTH']) ? $_POST['BIRTH'] : null);
+                $customer->setMaritalStatus(!empty($_POST['MARITAL_STATUS']) ? $_POST['MARITAL_STATUS'] : null);
                 $customer->setGender(!empty($_POST['GENDER']) ? (int) $_POST['GENDER'] : null);
                 $customer->setIncomeLevel(!empty($_POST['INCOME_LEVEL']) ? (int) $_POST['INCOME_LEVEL'] : null);
 
@@ -118,12 +118,12 @@ if (!isset($_SESSION['loggedin'])) {
                 $customer = new Customer($lastCustomerId);
             }
 
+
             ?>
 
             <form method="post" class="form">
                 <fieldset>
                     <legend>Customer Information</legend>
-                    //TODO
 
                     <label class="form__label" for="CUSTOMER_ID">Customer ID:</label>
                     <input class="form__input" type="number" name="CUSTOMER_ID"
@@ -141,15 +141,21 @@ if (!isset($_SESSION['loggedin'])) {
 
                     <label class="form__label" for="EMAIL">Email:</label>
                     <input class="form__input" type="email" name="EMAIL" id="EMAIL"
-                        value="<?= $customer->getCustEmail() ?? null ?>" maxlength="30">
+                        value="<?= $customer->getCustEmail() ?? $faker->email() ?>" maxlength="30">
 
                     <label class="form__label" for="PHONE_NUMBER">Phone Number:</label>
                     <input class="form__input" type="text" name="PHONE_NUMBER" id="PHONE_NUMBER"
-                        value="<?= $customer->getPhoneNumbers ?? null ?>" maxlength="100">
+                        value="<?= $postalCode ?? null ?>" maxlength="100">
+
+                    <?php
+                    // Trunca el código postal a 10 caracteres
+                    $postalCode = substr($customer->getCustPostalCode(), 0, 10);
+                    echo "<script>console.log('Postal Code: " . $postalCode . "');</script>";
+                    ?>
 
                     <label class="form__label" for="POSTAL_CODE">Postal code:</label>
                     <input class="form__input" type="text" name="POSTAL_CODE" id="POSTAL_CODE"
-                        value="<?= $customer->getCustPostalCode() ?? null ?>" maxlength="10">
+                        value="<?= $customer->getCustPostalCode() ?? $faker->postcode() ?>" maxlength="10">
 
                     <label class="form__label" for="STATE">State:</label>
                     <input class="form__input" type="text" name="STATE" id="STATE"
@@ -161,7 +167,7 @@ if (!isset($_SESSION['loggedin'])) {
 
                     <label class="form__label" for="ADDRESS">Street adress:</label>
                     <input class="form__input" type="text" name="ADDRESS" id="ADDRESS"
-                        value="<?= $customer->getCustStreetAddress() ?? null ?>" maxlength="100">
+                        value="<?= $customer->getCustStreetAddress() ?? $faker->address() ?>" maxlength="100" required>
 
                     <label class="form__label" for="COUNTRY">Country:</label>
                     <input class="form__input" type="text" name="COUNTRY" id="COUNTRY"
@@ -176,11 +182,59 @@ if (!isset($_SESSION['loggedin'])) {
                         value="<?= $customer->getNlsTerritory() ?? null ?>" maxlength="30">
 
                     <label class="form__label" for="CREDIT">Credit Limit:</label>
-                    <input type="number" id="CREDIT" name="CREDIT" step="0.01" pattern="^\d{1,9}(\.\d{1,2})?$">
+                    <input type="number" id="CREDIT" name="CREDIT" step="0.1"
+                        value="<?= $customer->getCreditLimit() != 0.00 ? $customer->getCreditLimit() : '0.00' ?>">
 
-                    //HAY QUE HACER EL ID DEL EMPLOYEE Y BUSCAR QUE SI NO ESTÁ ESE ID MUESTRE MENSAJE DE QUE ESE ID NO
-                    ES BUENO
+                    <label class="form__label" for="MGR_ID">Employee ID:</label>
+                    <input class="form__input" type="number" name="MGR_ID" id="MGR_ID"
+                        value="<?= $customer->getAccountMgrId() ?? null ?> ">
 
+                    <!------------------------------------------------------------------------------>
+                    <label class="form__label" for="latitude">Latitud:</label>
+                    <input class="form__input" type="number" name="latitude" id="latitude"
+                        placeholder="Ingresa la latitud: min:-90 max:90" step="0.000001" min="-90" max="90">
+
+                    <label class="form__label" for="longitude">Longitud:</label>
+                    <input class="form__input" type="number" name="longitude" id="longitude"
+                        placeholder="Ingresa la longitud: min:-180 max:180" step="0.000001" min="-180" max="180">
+
+                    <label class="form__label" for="LOCATION">Geo location:</label>
+                    <input type="text" name="LOCATION" id="LOCATION"
+                        value="<?php echo $customer->getCustGeoLocation(); ?>" readonly>
+
+                    <script>
+                        document.getElementById('latitude').addEventListener('input', updateLocation);
+                        document.getElementById('longitude').addEventListener('input', updateLocation);
+
+                        function updateLocation() {
+                            const latitude = document.getElementById('latitude').value;
+                            const longitude = document.getElementById('longitude').value;
+                            document.getElementById('LOCATION').value = latitude && longitude ? `${latitude}, ${longitude}` : '';
+                        }
+                    </script>
+                    <!------------------------------------------------------------------------------>
+
+                    <label class="form__label" for="BIRTH">Date of birth:</label>
+                    <input class="form__input" type="date" name="BIRTH" id="BIRTH"
+                        value="<?= $customer->getDateOfBirth() ?? null ?>">
+
+                    <label class="form__label" for="MARITAL_STATUS">Marital status:</label>
+                    <select class="form__input" name="MARITAL_STATUS" id="MARITAL_STATUS">
+                        <option value="single" <?= $customer->getMaritalStatus() == "single" ? 'selected' : '' ?>>Single
+                        </option>
+                        <option value="married" <?= $customer->getMaritalStatus() == "married" ? 'selected' : '' ?>>Married
+                        </option>
+                    </select>
+
+                    <label class="form__label" for="GENDER">Gender:</label>
+                    <select name="GENDER" id="GENDER">
+                        <option value="M" <?= $customer->getGender() == "M" ? 'selected' : '' ?>>Male</option>
+                        <option value="F" <?= $customer->getGender() == "F" ? 'selected' : '' ?>>Female</option>
+                    </select>
+
+                    <label class="form__label" for="INCOME_LEVEL">Income level:</label>
+                    <input class="form__input" type="text" name="INCOME_LEVEL" id="INCOME_LEVEL" maxlength="20"
+                        value=" <?= $customer->getIncomeLevel() ? $customer->getIncomeLevel() : null ?> ">
 
 
                     <button class="form__button" type="submit">Guardar</button>

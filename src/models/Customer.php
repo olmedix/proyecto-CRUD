@@ -92,6 +92,7 @@ class Customer extends Model
 ) VALUES (
     ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
 ) ON DUPLICATE KEY UPDATE
+    CUST_FIRST_NAME =VALUES(CUST_FIRST_NAME),
     CUST_LAST_NAME =VALUES(CUST_FIRST_NAME), 
     CUST_STREET_ADDRESS =VALUES(CUST_LAST_NAME), 
     CUST_POSTAL_CODE =VALUES(CUST_STREET_ADDRESS), 
@@ -117,25 +118,25 @@ class Customer extends Model
             }
             $stmt->bind_param(
                 "issssssssssdsisssss",
-                $customer_id,
-                $cust_first_name,
-                $cust_last_name,
-                $cust_street_address,
-                $cust_postal_code,
-                $cust_city,
-                $cust_state,
-                $cust_country,
-                $phone_numbers,
-                $nls_language,
-                $nls_territory,
-                $credit_limit,
-                $cust_email,
-                $account_mgr_id,
-                $cust_geo_location,
-                $date_of_birth,
-                $marital_status,
-                $gender,
-                $income_level
+                $this->customer_id,
+                $this->cust_first_name,
+                $this->cust_last_name,
+                $this->cust_street_address,
+                $this->cust_postal_code,
+                $this->cust_city,
+                $this->cust_state,
+                $this->cust_country,
+                $this->phone_numbers,
+                $this->nls_language,
+                $this->nls_territory,
+                $this->credit_limit,
+                $this->cust_email,
+                $this->account_mgr_id,
+                $this->cust_geo_location,
+                $this->date_of_birth,
+                $this->marital_status,
+                $this->gender,
+                $this->income_level
             );
 
             if ($stmt->execute()) {
@@ -149,11 +150,12 @@ class Customer extends Model
                 }
             } else {
                 $conn->rollback();
-                echo "<script>alert('Error al agregar o modificar un cliente.');</script>";
+                echo "<script>alert('Error al agregar o modificar un cliente. ELSE DE EXECUTE EN SAVE');</script>";
             }
 
         } catch (\mysqli_sql_exception $e) {
-            echo "<script>alert('Error en agregar o modificar un empleado.');</script>";
+            echo "" . $e->getMessage() . "";
+            // echo "<script>alert('Error en agregar o modificar un cliente. CATCH DE SAVE');</script>";
             return;
         } catch (\Exception $e) {
             "<script>alert('Se ha producido un error general en save.');</script>";
@@ -217,7 +219,7 @@ class Customer extends Model
                 credit_limit: $customerData['CREDIT_LIMIT'],
                 cust_email: $customerData['CUST_EMAIL'],
                 account_mgr_id: $customerData['ACCOUNT_MGR_ID'],
-                cust_geo_location: json_encode($customerData['CUST_GEO_LOCATION']),  // Usar json_encode para almacenar la ubicación geográfica
+                cust_geo_location: $customerData['CUST_GEO_LOCATION'],
                 date_of_birth: $customerData['DATE_OF_BIRTH'],
                 marital_status: $customerData['MARITAL_STATUS'],
                 gender: $customerData['GENDER'],
