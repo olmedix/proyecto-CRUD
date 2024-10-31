@@ -147,11 +147,7 @@ if (!isset($_SESSION['loggedin'])) {
                     <input class="form__input" type="text" name="PHONE_NUMBER" id="PHONE_NUMBER"
                         value="<?= $postalCode ?? null ?>" maxlength="100">
 
-                    <?php
-                    // Trunca el código postal a 10 caracteres
-                    $postalCode = substr($customer->getCustPostalCode(), 0, 10);
-                    echo "<script>console.log('Postal Code: " . $postalCode . "');</script>";
-                    ?>
+
 
                     <label class="form__label" for="POSTAL_CODE">Postal code:</label>
                     <input class="form__input" type="text" name="POSTAL_CODE" id="POSTAL_CODE"
