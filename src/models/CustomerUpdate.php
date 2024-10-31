@@ -125,44 +125,61 @@ if (!isset($_SESSION['loggedin'])) {
                     <legend>Customer Information</legend>
                     //TODO
 
-                    <label class="form__label" for="employee_id">Employee ID:</label>
-                    <input class="form__input" type="number" name="employee_id"
-                        value="<?php echo $employee->getEmployeeId(); ?>" readonly>
+                    <label class="form__label" for="CUSTOMER_ID">Customer ID:</label>
+                    <input class="form__input" type="number" name="CUSTOMER_ID"
+                        value="<?php echo $customer->getCustomerId(); ?>" readonly>
 
-                    <label class="form__label" for="first_name">First Name:</label>
-                    <input class="form__input" type="text" name="first_name" id="first_name"
-                        value="<?= $employee->getFirstName() ? $employee->getFirstName() : $faker->firstName() ?>"
+                    <label class="form__label" for="FIRST_NAME">First Name:</label>
+                    <input class="form__input" type="text" name="FIRST_NAME" id="FIRST_NAME"
+                        value="<?= $customer->getCustFirstName() ? $customer->getCustFirstName() : $faker->firstName() ?>"
                         required maxlength="20" pattern="[a-zA-Z]{1,20}">
 
-                    <label class="form__label" for="last_name">Last Name:</label>
-                    <input class="form__input" type="text" name="last_name" id="last_name"
-                        value="<?= $employee->getLastName() ? $employee->getLastName() : $faker->lastName() ?>" required
-                        maxlength="25" pattern="[a-zA-Z]{1,20}">
+                    <label class="form__label" for="LAST_NAME">Last Name:</label>
+                    <input class="form__input" type="text" name="LAST_NAME" id="LAST_NAME"
+                        value="<?= $customer->getCustLastName() ? $customer->getCustLastName() : $faker->lastName() ?>"
+                        required maxlength="20" pattern="[a-zA-Z]{1,20}">
 
-                    <label class="form__label" for="job_id">Job ID:</label>
-                    <select class="form__input" name="job_id" id="job_id" required>
-                        <option value="AC_ACCOUNT" <?= $employee->getJobId() === 'AC_ACCOUNT' ? 'selected' : '' ?>
-                            >AC_ACCOUNT</option>
-                        <option value="AC_MGR" <?= $employee->getJobId() === 'AC_MGR' ? 'selected' : '' ?>>AC_MGR</option>
-                        <option value="AD_ASST" <?= $employee->getJobId() === 'AD_ASST' ? 'selected' : '' ?>>AD_ASST
-                        </option>
-                        <option value="AD_PRES" <?= $employee->getJobId() === 'AD_PRES' ? 'selected' : '' ?>>AD_PRES
-                        </option>
-                    </select>
+                    <label class="form__label" for="EMAIL">Email:</label>
+                    <input class="form__input" type="email" name="EMAIL" id="EMAIL"
+                        value="<?= $customer->getCustEmail() ?? null ?>" maxlength="30">
 
-                    <label class="form__label" for="email">Email:</label>
-                    <input class="form__input" type="email" name="email" id="email"
-                        value="<?= $employee->getEmail() ?? null ?>" maxlength="25">
+                    <label class="form__label" for="PHONE_NUMBER">Phone Number:</label>
+                    <input class="form__input" type="text" name="PHONE_NUMBER" id="PHONE_NUMBER"
+                        value="<?= $customer->getPhoneNumbers ?? null ?>" maxlength="100">
 
+                    <label class="form__label" for="POSTAL_CODE">Postal code:</label>
+                    <input class="form__input" type="text" name="POSTAL_CODE" id="POSTAL_CODE"
+                        value="<?= $customer->getCustPostalCode() ?? null ?>" maxlength="10">
 
-                    <label class="form__label" for="manager_id">Manager ID:</label>
-                    <select class="form__input" name="manager_id" id="manager_id">
-                        <option value="">No Manager</option>
-                        <option value="100" <?= $employee->getManagerId() == 100 ? 'selected' : '' ?>>King Steven</option>
-                        <option value="101" <?= $employee->getManagerId() == 101 ? 'selected' : '' ?>>Kochhar Neena
-                        </option>
+                    <label class="form__label" for="STATE">State:</label>
+                    <input class="form__input" type="text" name="STATE" id="STATE"
+                        value="<?= $customer->getCustState() ?? null ?>" maxlength="20">
 
-                    </select>
+                    <label class="form__label" for="CITY">City:</label>
+                    <input class="form__input" type="text" name="CITY" id="CITY"
+                        value="<?= $customer->getCustCity() ?? null ?>" maxlength="20">
+
+                    <label class="form__label" for="ADDRESS">Street adress:</label>
+                    <input class="form__input" type="text" name="ADDRESS" id="ADDRESS"
+                        value="<?= $customer->getCustStreetAddress() ?? null ?>" maxlength="100">
+
+                    <label class="form__label" for="COUNTRY">Country:</label>
+                    <input class="form__input" type="text" name="COUNTRY" id="COUNTRY"
+                        value="<?= $customer->getCustCountry() ?? null ?>" maxlength="20">
+
+                    <label class="form__label" for="LANGUAGE">NLS language:</label>
+                    <input class="form__input" type="text" name="LANGUAGE" id="LANGUAGE"
+                        value="<?= $customer->getNlsLanguage() ?? null ?>" maxlength="3">
+
+                    <label class="form__label" for="TERRITORY">NLS territory:</label>
+                    <input class="form__input" type="text" name="TERRITORY" id="TERRITORY"
+                        value="<?= $customer->getNlsTerritory() ?? null ?>" maxlength="30">
+
+                    <label class="form__label" for="CREDIT">Credit Limit:</label>
+                    <input type="number" id="CREDIT" name="CREDIT" step="0.01" pattern="^\d{1,9}(\.\d{1,2})?$">
+
+                    //HAY QUE HACER EL ID DEL EMPLOYEE Y BUSCAR QUE SI NO ESTÁ ESE ID MUESTRE MENSAJE DE QUE ESE ID NO
+                    ES BUENO
 
 
 
