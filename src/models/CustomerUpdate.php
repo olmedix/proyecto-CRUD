@@ -86,16 +86,16 @@ if (!isset($_SESSION['loggedin'])) {
                 $customer->setCustState(!empty($_POST['STATE']) ? $_POST['STATE'] : null);
                 $customer->setCustCity(!empty($_POST['CITY']) ? $_POST['CITY'] : null);
                 $customer->setCustStreetAddress(!empty($_POST['ADDRESS']) ? $_POST['ADDRESS'] : null);
-                $customer->setCustCountry(!empty($_POST['COUNTRY']) ? (float) $_POST['COUNTRY'] : null);
-                $customer->setNlsLanguage(!empty($_POST['LANGUAGE']) ? (float) $_POST['LANGUAGE'] : null);
-                $customer->setNlsTerritory(!empty($_POST['TERRITORY']) ? (int) $_POST['TERRITORY'] : null);
-                $customer->setCreditLimit(!empty($_POST['CREDIT']) ? (int) $_POST['CREDIT'] : null);
+                $customer->setCustCountry(!empty($_POST['COUNTRY']) ? $_POST['COUNTRY'] : null);
+                $customer->setNlsLanguage(!empty($_POST['LANGUAGE']) ? $_POST['LANGUAGE'] : null);
+                $customer->setNlsTerritory(!empty($_POST['TERRITORY']) ? $_POST['TERRITORY'] : null);
+                $customer->setCreditLimit(!empty($_POST['CREDIT']) ? (float) $_POST['CREDIT'] : null);
                 $customer->setAccountMgrId(!empty($_POST['MGR_ID']) ? (int) $_POST['MGR_ID'] : null);
-                $customer->setCustGeoLocation(!empty($_POST['LOCATION']) ? (int) $_POST['LOCATION'] : null);
+                $customer->setCustGeoLocation(!empty($_POST['LOCATION']) ? $_POST['LOCATION'] : null);
                 $customer->setDateOfBirth(!empty($_POST['BIRTH']) ? $_POST['BIRTH'] : null);
                 $customer->setMaritalStatus(!empty($_POST['MARITAL_STATUS']) ? $_POST['MARITAL_STATUS'] : null);
-                $customer->setGender(!empty($_POST['GENDER']) ? (int) $_POST['GENDER'] : null);
-                $customer->setIncomeLevel(!empty($_POST['INCOME_LEVEL']) ? (int) $_POST['INCOME_LEVEL'] : null);
+                $customer->setGender(!empty($_POST['GENDER']) ? $_POST['GENDER'] : null);
+                $customer->setIncomeLevel(!empty($_POST['INCOME_LEVEL']) ? $_POST['INCOME_LEVEL'] : null);
 
                 // Guardar (insertar o actualizar)
                 $customer->save();
@@ -186,28 +186,13 @@ if (!isset($_SESSION['loggedin'])) {
                         value="<?= $customer->getAccountMgrId() ?? null ?> ">
 
                     <!------------------------------------------------------------------------------>
-                    <label class="form__label" for="latitude">Latitud:</label>
-                    <input class="form__input" type="number" name="latitude" id="latitude"
-                        placeholder="Ingresa la latitud: min:-90 max:90" step="0.000001" min="-90" max="90">
 
-                    <label class="form__label" for="longitude">Longitud:</label>
-                    <input class="form__input" type="number" name="longitude" id="longitude"
-                        placeholder="Ingresa la longitud: min:-180 max:180" step="0.000001" min="-180" max="180">
 
-                    <label class="form__label" for="LOCATION">Geo location:</label>
-                    <input type="text" name="LOCATION" id="LOCATION"
-                        value="<?php echo $customer->getCustGeoLocation(); ?>" readonly>
+                    <label class="form__label" for="LOCATION">Geo location: Important to respect the format!</label>
+                    <input class="form__input" type="text" name="LOCATION" id="LOCATION"
+                        value='<?= $customer->getCustGeoLocation() ?? null ?>'
+                        placeholder="FORMAT: '[-86.13631, 40.485424]'">
 
-                    <script>
-                        document.getElementById('latitude').addEventListener('input', updateLocation);
-                        document.getElementById('longitude').addEventListener('input', updateLocation);
-
-                        function updateLocation() {
-                            const latitude = document.getElementById('latitude').value;
-                            const longitude = document.getElementById('longitude').value;
-                            document.getElementById('LOCATION').value = latitude && longitude ? `${latitude}, ${longitude}` : '';
-                        }
-                    </script>
                     <!------------------------------------------------------------------------------>
 
                     <label class="form__label" for="BIRTH">Date of birth:</label>
@@ -224,13 +209,14 @@ if (!isset($_SESSION['loggedin'])) {
 
                     <label class="form__label" for="GENDER">Gender:</label>
                     <select name="GENDER" id="GENDER">
+                        <option value="">Select a gender</option>
                         <option value="M" <?= $customer->getGender() == "M" ? 'selected' : '' ?>>Male</option>
                         <option value="F" <?= $customer->getGender() == "F" ? 'selected' : '' ?>>Female</option>
                     </select>
 
                     <label class="form__label" for="INCOME_LEVEL">Income level:</label>
                     <input class="form__input" type="text" name="INCOME_LEVEL" id="INCOME_LEVEL" maxlength="20"
-                        value=" <?= $customer->getIncomeLevel() ? $customer->getIncomeLevel() : null ?> ">
+                        value=" <?= $customer->getIncomeLevel() ? $customer->getIncomeLevel() : '' ?> ">
 
 
                     <button class="form__button" type="submit">Guardar</button>

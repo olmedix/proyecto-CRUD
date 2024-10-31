@@ -53,7 +53,7 @@ class Customer extends Model
 
             $table = static::$table;
 
-            // Verificar si el email ya existe (excluyendo el caso del mismo empleado_id)
+            // Verificar si el email ya existe (excluyendo el caso del mismo customer_id)
             $sql = "SELECT customer_id FROM $table WHERE cust_email = ? AND customer_id != ?";
             $stmt = $conn->prepare($sql);
             if (!$stmt) {
@@ -69,6 +69,29 @@ class Customer extends Model
                 echo "<script>alert('Ya existe otro cliente con ese email.');</script>";
                 return;
             }
+
+
+            //Verificar que el id del empleado existe
+            $sql = "SELECT employee_id FROM employees";
+            $stmt = $conn->prepare($sql);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            $exists = false;
+
+            while ($row = $result->fetch_assoc()) {
+                if ($row['employee_id'] == $this->account_mgr_id) {
+                    $exists = true;
+                    break;
+                }
+            }
+
+            if (!$exists && $this->account_mgr_id != null) {
+                echo "<span style='color: red; font-weight: bold;'>It has not been possible to add or modify the client, check the employee ID or the geo location format</span>";
+                return;
+            }
+
+
 
             $sql = "INSERT INTO $table (CUSTOMER_ID, 
     CUST_FIRST_NAME, 
@@ -142,11 +165,11 @@ class Customer extends Model
             if ($stmt->execute()) {
                 if ($stmt->affected_rows > 0) {
                     $conn->commit();
-                    echo '<p style="font-size: 20px; color: blue; font-weight: bold;">Employee successfully registered.</p>';
+                    echo '<p style="font-size: 20px; color: blue; font-weight: bold;">Customer successfully registered.</p>';
 
                 } else {
                     $conn->rollback();
-                    echo '<p style="font-size: 20px; color: red; font-weight: bold;">There was an error registering the employee.</p>';
+                    echo '<p style="font-size: 20px; color: red; font-weight: bold;">There was an error registering the customer.</p>';
                 }
             } else {
                 $conn->rollback();
@@ -154,8 +177,8 @@ class Customer extends Model
             }
 
         } catch (\mysqli_sql_exception $e) {
-            echo "" . $e->getMessage() . "";
-            // echo "<script>alert('Error en agregar o modificar un cliente. CATCH DE SAVE');</script>";
+            echo "" . $e->getMessage();
+            echo "<script>alert('Error en agregar o modificar un cliente. CATCH DE SAVE');</script>";
             return;
         } catch (\Exception $e) {
             "<script>alert('Se ha producido un error general en save.');</script>";
@@ -279,19 +302,65 @@ class Customer extends Model
     }
 
 
+    public function destroy(int $customer_id): void
+    {
+        try {
+            $config = Database::loadConfig('C:/temp/config.db');
+            $db = new Database(
+                $config['DB_HOST'],
+                $config['DB_PORT'],
+                $config['DB_DATABASE'],
+                $config['DB_USERNAME'],
+                $config['DB_PASSWORD']
+            );
+            $conn = $db->connectDB();
+            $conn->autocommit(false);
 
+            $table = static::$table;
 
+            // Verificar si el customer_id existe
+            $sql = "SELECT * FROM $table WHERE customer_id = ?";
+            $stmt = $conn->prepare($sql);
 
+            if (!$stmt) {
+                "<script>alert('Error al preparar la consulta.');</script>";
+            }
 
+            // Vincular los parámetros
+            $stmt->bind_param("i", $customer_id);
+            $stmt->execute();
+            $result = $stmt->get_result();
 
+            // Comprobar si hay resultados
+            if ($result->num_rows == 1) {
 
+                $sql = "DELETE FROM $table WHERE customer_id = ?";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("i", $customer_id);
 
+                if ($stmt->execute()) {
+                    $conn->commit();
+                } else {
+                    $conn->rollback();
+                }
 
-
-
-
-
-
+            } else {
+                if ($conn) {
+                    $conn->rollback();
+                }
+            }
+        } catch (\mysqli_sql_exception $e) {
+            if ($conn) {
+                $conn->rollback();
+            }
+        } catch (\Exception $e) {
+            echo "<script>alert('Error general eliminando un cliente.');</script>";
+        } finally {
+            if ($conn) {
+                $db->closeDB();
+            }
+        }
+    }
 
 
 
