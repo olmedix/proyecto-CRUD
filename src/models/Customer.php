@@ -363,14 +363,6 @@ class Customer extends Model
     }
 
 
-
-
-
-
-
-
-
-
     public function getCustomerId(): int
     {
         return $this->customer_id;

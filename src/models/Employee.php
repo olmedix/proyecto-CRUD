@@ -68,6 +68,28 @@ class Employee extends Model
                 }
 
 
+                //Verificar que el id del empleado existe
+                $sql = "SELECT employee_id FROM employees";
+                $stmt = $conn->prepare($sql);
+                $stmt->execute();
+                $result = $stmt->get_result();
+
+                $exists = false;
+
+                while ($row = $result->fetch_assoc()) {
+                    if ($row['employee_id'] == $this->manager_id) {
+                        $exists = true;
+                        break;
+                    }
+                }
+
+                if (!$exists && $this->manager_id != null) {
+                    echo "<span style='color: red; font-weight: bold;'>It has not been possible to add or modify the client, check the manager</span>";
+                    return;
+                }
+
+
+
                 // Intenta hacer un insert si el employee_id existe 
                 $sql = "INSERT INTO $table (employee_id, first_name, last_name, email, phone_number, hire_date, job_id, salary, commission_pct, manager_id, department_id) 
                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
