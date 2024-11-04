@@ -191,7 +191,7 @@ if (!isset($_SESSION['loggedin'])) {
                     <label class="form__label" for="LOCATION">Geo location: Important to respect the format!</label>
                     <input class="form__input" type="text" name="LOCATION" id="LOCATION"
                         value='<?= $customer->getCustGeoLocation() ?? null ?>'
-                        placeholder="FORMAT: '[-86.13631, 40.485424]'">
+                        placeholder="FORMAT: [-86.13631, 40.485424]">
 
                     <!------------------------------------------------------------------------------>
 
@@ -219,7 +219,7 @@ if (!isset($_SESSION['loggedin'])) {
                         value=" <?= $customer->getIncomeLevel() ? $customer->getIncomeLevel() : '' ?> ">
 
 
-                    <button class="form__button" type="submit">Guardar</button>
+                    <button class="form__button" type="submit">Save</button>
                 </fieldset>
             </form>
 
