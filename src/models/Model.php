@@ -52,4 +52,5 @@ abstract class Model
             }
         }
     }
+
 }
